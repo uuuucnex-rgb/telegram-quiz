@@ -3,212 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Дизайн-Квиз</title>
+    <title>RE:SPACE AI</title>
     <style>
         :root {
-            --bg-color: #f2f2f7;
-            --card-color: #ffffff;
-            --primary-text-color: #000000;
-            --secondary-text-color: #8a8a8e;
-            --accent-color: #007aff;
-            --separator-color: #c6c6c8;
-            --button-secondary-bg: #e5e5ea;
-            --disabled-bg: #e5e5ea;
-            --disabled-text: #aeaeb2;
+            --bg-color: #0d0d0f;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1a6;
+            --accent-gradient: linear-gradient(135deg, #0a84ff, #64d2ff);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
+
+        /* --- Анимации --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; translateY(0); } }
+        @keyframes move-light1 { 0%, 100% { transform: translate(10vw, -10vh); } 50% { transform: translate(70vw, 80vh); } }
+        @keyframes move-light2 { 0%, 100% { transform: translate(80vw, 90vh); } 50% { transform: translate(10vw, 20vh); } }
+
+        /* --- Базовый стиль и фон --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--primary-text-color);
+            color: var(--text-primary);
             margin: 0;
-            padding: 20px 15px 130px 15px;
+            padding: 20px;
             -webkit-font-smoothing: antialiased;
-            display: flex;
-            justify-content: center;
-        }
-        .quiz-container { width: 100%; max-width: 420px; }
-        .header { margin-bottom: 24px; }
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--secondary-text-color);
-        }
-        .progress-bar-container { width: 100%; background-color: #e5e5ea; border-radius: 5px; height: 6px; }
-        .progress-bar { width: 10%; height: 100%; background-color: var(--accent-color); border-radius: 5px; transition: width 0.4s ease-in-out; }
-        h2 { font-size: 26px; font-weight: 700; text-align: center; margin: 0 0 24px 0; letter-spacing: -0.5px; }
-        .question { display: none; }
-        .question.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .option-card {
-            background-color: var(--card-color);
-            border-radius: 20px;
             overflow: hidden;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        }
-        .option-card img { width: 100%; height: 110px; object-fit: cover; display: block; }
-        .option-card span { padding: 16px 10px; display: block; text-align: center; font-weight: 600; font-size: 16px; }
-        .option-card.selected { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3); }
-        .navigation {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(249, 249, 249, 0.85);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
-            padding: 20px 15px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
             display: flex;
             justify-content: center;
-            gap: 12px;
-            border-top: 1px solid var(--separator-color);
+            align-items: center;
+            min-height: 100vh;
         }
-        .nav-button {
-            border: none;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 600;
-            padding: 16px 0;
-            flex-grow: 1;
-            max-width: 420px;
-            cursor: pointer;
-            transition: all 0.2s;
+
+        .background-lights {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1;
         }
-        .nav-button:active { transform: scale(0.97); }
-        #prevBtn { background-color: var(--button-secondary-bg); color: var(--accent-color); display: none; flex-grow: 0.5; }
-        #nextBtn, #generateBtn { background-color: var(--accent-color); color: #ffffff; }
-        #nextBtn:disabled, #generateBtn:disabled { background-color: var(--disabled-bg); color: var(--disabled-text); cursor: not-allowed; transform: none; }
-        #generateBtn { display: none; }
+        .light {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            filter: blur(150px);
+        }
+        .light.one {
+            width: 500px; height: 500px;
+            background: #007aff;
+            animation: move-light1 25s infinite ease-in-out;
+        }
+        .light.two {
+            width: 400px; height: 400px;
+            background: #5856d6;
+            animation: move-light2 20s infinite ease-in-out;
+        }
+
+        /* --- Контейнеры экранов --- */
+        .screen {
+            width: 100%;
+            max-width: 450px;
+            display: none;
+        }
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s var(--animation-curve);
+        }
+        .screen.fade-out {
+            animation: fadeOut 0.4s var(--animation-curve) forwards;
+        }
+
+        /* --- Стеклянная панель --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            -webkit-backdrop-filter: blur(50px);
+            backdrop-filter: blur(50px);
+            box-shadow: 0 15px 40px var(--shadow-color);
+        }
+
+        /* --- Экран HOME --- */
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #ffffff, #a1a1a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s 0.2s var(--animation-curve) both;
+        }
+        .home-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin: 0 0 30px 0;
+            line-height: 1.5;
+            animation: fadeInUp 0.8s 0.4s var(--animation-curve) both;
+        }
+
+        /* Главная кнопка */
+        .ai-button {
+            /* ... стили из предыдущего кода ... */
+            width: 100%; background: var(--accent-gradient); color: white; border: none;
+            border-radius: 20px; padding: 20px; font-size: 17px; font-weight: 600; cursor: pointer;
+            text-align: left; transition: all 0.3s var(--animation-curve);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; overflow: hidden;
+            animation: fadeInUp 0.8s 0.6s var(--animation-curve) both;
+        }
+        .ai-button:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25); }
+        .ai-button-content { display: flex; align-items: center; justify-content: space-between; }
+        .ai-button-text strong { display: block; margin-bottom: 4px; }
+        .ai-button-text span { font-size: 14px; opacity: 0.8; }
+        .ai-button-icon { font-size: 28px; }
+
+        .section-title { font-size: 20px; font-weight: 600; margin: 30px 0 20px 0; animation: fadeInUp 0.8s 0.8s var(--animation-curve) both; }
+        .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; animation: fadeInUp 0.8s 1s var(--animation-curve) both; }
+        .tool-card {
+            /* ... стили из предыдущего кода, адаптированные ... */
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+            padding: 16px; text-decoration: none; color: var(--text-primary); transition: all 0.3s var(--animation-curve);
+        }
+        .tool-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
+        .tool-icon { font-size: 22px; margin-bottom: 10px; }
+        .tool-card strong { font-size: 15px; font-weight: 600; display: block; }
+        .tool-card span { font-size: 13px; color: var(--text-secondary); }
+
+        /* --- Стили для экрана КВИЗА --- */
+        .quiz-header {
+            display: flex; align-items: center; margin-bottom: 20px;
+        }
+        .back-button {
+            background: none; border: none; font-size: 28px; color: var(--text-secondary);
+            cursor: pointer; padding: 0 15px 0 0; line-height: 1;
+        }
+        .quiz-header .progress-info { flex-grow: 1; }
+        .progress-bar-container { background-color: rgba(255,255,255,0.1); border-radius: 5px; height: 6px; margin-top: 5px; }
+        .progress-bar { height: 100%; background-color: #64d2ff; border-radius: 5px; transition: width 0.4s ease-in-out; }
+        .quiz-question-title { font-size: 22px; font-weight: 600; text-align: center; margin: 0 0 20px 0; }
+        .quiz-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .quiz-option-card {
+            background: rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden;
+            cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease;
+        }
+        .quiz-option-card:hover { background: rgba(255,255,255,0.1); }
+        .quiz-option-card.selected { border-color: #64d2ff; }
+        .quiz-option-card img { width: 100%; height: 90px; object-fit: cover; display: block; }
+        .quiz-option-card span { padding: 12px 10px; display: block; text-align: center; font-weight: 500; font-size: 14px; }
+        .quiz-navigation { margin-top: 20px; text-align: center; }
+        .quiz-generate-btn {
+            width: 100%; background: var(--accent-gradient); color: white; border: none; border-radius: 14px;
+            padding: 16px 0; font-size: 17px; font-weight: 600; cursor: pointer; display: none;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <header class="header">
-        <div class="progress-info"><span id="stepCounter">Шаг 1 из 10</span></div>
-        <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
-    </header>
+    <div class="background-lights">
+        <div class="light one"></div>
+        <div class="light two"></div>
+    </div>
 
-    <main id="quiz">
-        <div class="question active" data-question="1">
-            <h2>Какой стиль вам ближе?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="scandinavian"><img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=300&q=80"><span>Сканди</span></div>
-                <div class="option-card" data-value="loft"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=300&q=80"><span>Лофт</span></div>
-                <div class="option-card" data-value="minimalism"><img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=300&q=80"><span>Минимализм</span></div>
-                <div class="option-card" data-value="classic"><img src="https://images.unsplash.com/photo-1616137356395-53842d7b1e42?auto=format&fit=crop&w=300&q=80"><span>Неоклассика</span></div>
+    <!-- ===== ЭКРАН 1: ГЛАВНЫЙ ===== -->
+    <div id="homeScreen" class="screen active">
+        <div class="glass-panel">
+            <h2 class="logo">RE:SPACE AI</h2>
+            <p class="home-description">Создавайте уникальные концепты интерьера из ваших идей и фотографий. Наш ИИ-ассистент — ваш персональный дизайнер.</p>
+
+            <button id="startQuizBtn" class="ai-button">
+                <div class="ai-button-content">
+                    <div class="ai-button-text">
+                        <strong>Начать редизайн по фото</strong>
+                        <span>Запустите наш квиз-генератор</span>
+                    </div>
+                    <div class="ai-button-icon">✨</div>
+                </div>
+            </button>
+
+            <h3 class="section-title">Инструменты</h3>
+            <div class="tools-grid">
+                <a href="#" class="tool-card"><div class="tool-icon">🖼️</div><strong>Галерея</strong><span>Идеи и проекты</span></a>
+                <a href="#" class="tool-card"><div class="tool-icon">🎨</div><strong>Палитры</strong><span>Подбор цветов</span></a>
+                <a href="#" class="tool-card"><div class="tool-icon">🛋️</div><strong>Библиотека</strong><span>3D-модели</span></a>
+                <a href="#" class="tool-card"><div class="tool-icon">💬</div><strong>AI-стилист</strong><span>Чат-ассистент</span></a>
             </div>
         </div>
+    </div>
 
-        <div class="question" data-question="2">
-            <h2>Основная цветовая гамма?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="light"><img src="https://images.unsplash.com/photo-1533090481720-856c6e7c6c33?auto=format&fit=crop&w=300&q=80"><span>Светлая</span></div>
-                <div class="option-card" data-value="dark"><img src="https://images.unsplash.com/photo-1589834377839-011c3abf5a43?auto=format&fit=crop&w=300&q=80"><span>Темная</span></div>
-                <div class="option-card" data-value="natural"><img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=300&q=80"><span>Природная</span></div>
-                <div class="option-card" data-value="accent"><img src="https://images.unsplash.com/photo-1598262493399-23f211979b18?auto=format&fit=crop&w=300&q=80"><span>С акцентом</span></div>
-            </div>
+    <!-- ===== ЭКРАН 2: КВИЗ ===== -->
+    <div id="quizScreen" class="screen">
+        <div class="glass-panel">
+            <header class="quiz-header">
+                <button id="backToHomeBtn" class="back-button">‹</button>
+                <div class="progress-info">
+                    <span id="stepCounter">Шаг 1 из 10</span>
+                    <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                </div>
+            </header>
+
+            <main id="quiz">
+                <!-- Контент квиза будет вставлен сюда с помощью JS -->
+            </main>
+
+            <footer class="quiz-navigation">
+                <button id="generateBtn" class="quiz-generate-btn">✨ Сгенерировать</button>
+            </footer>
         </div>
+    </div>
+
+
+    <script>
+        const homeScreen = document.getElementById('homeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const backToHomeBtn = document.getElementById('backToHomeBtn');
+
+        // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
+        startQuizBtn.addEventListener('click', () => {
+            homeScreen.classList.add('fade-out');
+            homeScreen.addEventListener('animationend', () => {
+                homeScreen.classList.remove('active');
+                homeScreen.classList.remove('fade-out');
+                quizScreen.classList.add('active');
+            }, { once: true });
+        });
+
+        backToHomeBtn.addEventListener('click', () => {
+            quizScreen.classList.add('fade-out');
+            quizScreen.addEventListener('animationend', () => {
+                quizScreen.classList.remove('active');
+                quizScreen.classList.remove('fade-out');
+                homeScreen.classList.add('active');
+            }, { once: true });
+        });
+
+        // --- ЛОГИКА КВИЗА (взята из предыдущего кода и адаптирована) ---
+        const quizContainer = document.getElementById('quiz');
+        const generateBtn = document.getElementById('generateBtn');
+        const progressBar = document.getElementById('progressBar');
+        const stepCounter = document.getElementById('stepCounter');
+
+        // Данные для всех 10 вопросов
+        const quizData = [
+            { title: "Какой стиль вам ближе?", options: { scandinavian: "Сканди", loft: "Лофт", minimalism: "Минимализм", classic: "Неоклассика" }, images: { scandinavian: "1616046229478-9901c5536a45", loft: "1560448204-e02f11c3d0e2", minimalism: "1505693416388-ac5ce068fe85", classic: "1616137356395-53842d7b1e42" } },
+            { title: "Основная цветовая гамма?", options: { light: "Светлая", dark: "Темная", natural: "Природная", accent: "С акцентом" }, images: { light: "1533090481720-856c6e7c6c33", dark: "1589834377839-011c3abf5a43", natural: "1493663284031-b7e3aefcae8e", accent: "1598262493399-23f211979b18" } },
+            { title: "Предпочтения по полу?", options: { wood: "Дерево", tile: "Керамогранит", concrete: "Микроцемент", carpet: "Ковролин" }, images: { wood: "1589803133319-3a3e6702c81d", tile: "1599814131238-3231377d6199", concrete: "1617361250756-9a57a8a6152a", carpet: "1574856344991-aaa31b6f7ce3" } },
+            { title: "Какой материал доминирует?", options: { fabric: "Текстиль", metal: "Металл", glass: "Стекло", stone: "Камень" }, images: { fabric: "1567016432779-1fee8412217c", metal: "1588612962093-fe8a8f8952a2", glass: "1617806118233-54e6de79a7e3", stone: "1600121840139-e938f2945039" } },
+            { title: "Выберите тип освещения", options: { track: "Трековые", pendant: "Декоративные", hidden: "Скрытая подсветка", floor_lamp: "Торшеры" }, images: { track: "1617094498394-e0a553c5523b", pendant: "1615873968403-89e0686292f9", hidden: "1631679074366-6232b5314a33", floor_lamp: "1542728558-88065092a58b" } },
+            { title: "Главный элемент декора?", options: { plants: "Растения", art: "Картины", mirrors: "Зеркала", vases: "Вазы и свечи" }, images: { plants: "1509423350717-c730a1694345", art: "1554344202-0a2a62349352", mirrors: "1615875617331-259c5950ac70", vases: "1579895824233-97c7de5c1b6b" } },
+            { title: "Какая будет мебель?", options: { minimal: "Минималистичная", vintage: "С характером", cozy: "Мягкая и уютная", designer: "Дизайнерская" }, images: { minimal: "1499933374219-2f2c25609a25", vintage: "1555041469-a586c61ea9bc", cozy: "1558211583-d26f610c1a17", designer: "1524758631624-e2822e304c36" } },
+            { title: "Как насчет хранения?", options: { open: "Открытые полки", closed: "Скрытые шкафы", combined: "Комбинированное", showcase: "Стеклянные витрины" }, images: { open: "1600171228223-b1b74fcf7a6e", closed: "1618221195710-dd6b41faaea6", combined: "1594445362362-a84274488583", showcase: "1613575831032-68343714c33b" } },
+            { title: "Особенность пространства?", options: { fireplace: "Камин", reading_nook: "Уголок для чтения", workspace: "Рабочее место", window: "Большое окно" }, images: { fireplace: "1613553429598-383b40523555", reading_nook: "1544228865-7d73678c0f28", workspace: "1460925895917-afdab827c52f", window: "1502005229762-cf1b2da7c5d6" } },
+            { title: "Финальный штрих?", options: { smart_home: "Умный дом", eco: "Эко-материалы", audio: "Аудиосистема", aroma: "Ароматы" }, images: { smart_home: "1605470207869-5c94a219154a", eco: "1627993312204-a2faaf37d0c3", audio: "1593361184931-f62d16453f86", aroma: "1612293428542-88b838341434" } },
+        ];
         
-        <div class="question" data-question="3">
-            <h2>Предпочтения по полу?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="wood"><img src="https://images.unsplash.com/photo-1589803133319-3a3e6702c81d?auto=format&fit=crop&w=300&q=80"><span>Дерево</span></div>
-                <div class="option-card" data-value="tile"><img src="https://images.unsplash.com/photo-1599814131238-3231377d6199?auto=format&fit=crop&w=300&q=80"><span>Керамогранит</span></div>
-                <div class="option-card" data-value="concrete"><img src="https://images.unsplash.com/photo-1617361250756-9a57a8a6152a?auto=format&fit=crop&w=300&q=80"><span>Микроцемент</span></div>
-                <div class="option-card" data-value="carpet"><img src="https://images.unsplash.com/photo-1574856344991-aaa31b6f7ce3?auto=format&fit=crop&w=300&q=80"><span>Ковролин</span></div>
-            </div>
-        </div>
+        let currentQuestion = 0;
+        const userSelections = {};
 
-        <div class="question" data-question="4">
-            <h2>Какой материал доминирует?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="fabric"><img src="https://images.unsplash.com/photo-1567016432779-1fee8412217c?auto=format&fit=crop&w=300&q=80"><span>Мягкий текстиль</span></div>
-                <div class="option-card" data-value="metal"><img src="https://images.unsplash.com/photo-1588612962093-fe8a8f8952a2?auto=format&fit=crop&w=300&q=80"><span>Черный металл</span></div>
-                <div class="option-card" data-value="glass"><img src="https://images.unsplash.com/photo-1617806118233-54e6de79a7e3?auto=format&fit=crop&w=300&q=80"><span>Стекло</span></div>
-                <div class="option-card" data-value="stone"><img src="https://images.unsplash.com/photo-1600121840139-e938f2945039?auto=format&fit=crop&w=300&q=80"><span>Камень</span></div>
-            </div>
-        </div>
+        function renderQuestion(index) {
+            const questionData = quizData[index];
+            let optionsHTML = '';
+            for (const [value, text] of Object.entries(questionData.options)) {
+                const imageUrl = `https://images.unsplash.com/photo-${questionData.images[value]}?auto=format&fit=crop&w=200&q=80`;
+                const isSelected = userSelections[index + 1] === value ? 'selected' : '';
+                optionsHTML += `
+                    <div class="quiz-option-card ${isSelected}" data-value="${value}">
+                        <img src="${imageUrl}">
+                        <span>${text}</span>
+                    </div>
+                `;
+            }
 
-        <div class="question" data-question="5">
-            <h2>Выберите тип освещения</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="track"><img src="https://images.unsplash.com/photo-1617094498394-e0a553c5523b?auto=format&fit=crop&w=300&q=80"><span>Трековые</span></div>
-                <div class="option-card" data-value="pendant"><img src="https://images.unsplash.com/photo-1615873968403-89e0686292f9?auto=format&fit=crop&w=300&q=80"><span>Декоративные</span></div>
-                <div class="option-card" data-value="hidden"><img src="https://images.unsplash.com/photo-1631679074366-6232b5314a33?auto=format&fit=crop&w=300&q=80"><span>Скрытая подсветка</span></div>
-                <div class="option-card" data-value="floor_lamp"><img src="https://images.unsplash.com/photo-1542728558-88065092a58b?auto=format&fit=crop&w=300&q=80"><span>Торшеры</span></div>
-            </div>
-        </div>
+            quizContainer.innerHTML = `
+                <div class="question" data-question="${index + 1}">
+                    <h3 class="quiz-question-title">${questionData.title}</h3>
+                    <div class="quiz-options-grid">${optionsHTML}</div>
+                </div>
+            `;
+            updateUI();
+        }
 
-        <div class="question" data-question="6">
-            <h2>Главный элемент декора?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="plants"><img src="https://images.unsplash.com/photo-1509423350717-c730a1694345?auto=format&fit=crop&w=300&q=80"><span>Растения</span></div>
-                <div class="option-card" data-value="art"><img src="https://images.unsplash.com/photo-1554344202-0a2a62349352?auto=format&fit=crop&w=300&q=80"><span>Картины</span></div>
-                <div class="option-card" data-value="mirrors"><img src="https://images.unsplash.com/photo-1615875617331-259c5950ac70?auto=format&fit=crop&w=300&q=80"><span>Зеркала</span></div>
-                <div class="option-card" data-value="vases"><img src="https://images.unsplash.com/photo-1579895824233-97c7de5c1b6b?auto=format&fit=crop&w=300&q=80"><span>Вазы и свечи</span></div>
-            </div>
-        </div>
+        function updateUI() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            stepCounter.textContent = `Шаг ${currentQuestion + 1} из ${quizData.length}`;
+            generateBtn.style.display = currentQuestion === quizData.length - 1 ? 'block' : 'none';
+            generateBtn.disabled = !userSelections[currentQuestion + 1];
+        }
 
-        <div class="question" data-question="7">
-            <h2>Какая будет мебель?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="minimal"><img src="https://images.unsplash.com/photo-1499933374219-2f2c25609a25?auto=format&fit=crop&w=300&q=80"><span>Минималистичная</span></div>
-                <div class="option-card" data-value="vintage"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&q=80"><span>С характером</span></div>
-                <div class="option-card" data-value="cozy"><img src="https://images.unsplash.com/photo-1558211583-d26f610c1a17?auto=format&fit=crop&w=300&q=80"><span>Мягкая и уютная</span></div>
-                <div class="option-card" data-value="designer"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=300&q=80"><span>Дизайнерская</span></div>
-            </div>
-        </div>
+        quizContainer.addEventListener('click', e => {
+            const option = e.target.closest('.quiz-option-card');
+            if (!option) return;
 
-        <div class="question" data-question="8">
-            <h2>Как насчет хранения?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="open"><img src="https://images.unsplash.com/photo-1600171228223-b1b74fcf7a6e?auto=format&fit=crop&w=300&q=80"><span>Открытые полки</span></div>
-                <div class="option-card" data-value="closed"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=300&q=80"><span>Скрытые шкафы</span></div>
-                <div class="option-card" data-value="combined"><img src="https://images.unsplash.com/photo-1594445362362-a84274488583?auto=format&fit=crop&w=300&q=80"><span>Комбинированное</span></div>
-                <div class="option-card" data-value="showcase"><img src="https://images.unsplash.com/photo-1613575831032-68343714c33b?auto=format&fit=crop&w=300&q=80"><span>Стеклянные витрины</span></div>
-            </div>
-        </div>
-        
-        <div class="question" data-question="9">
-            <h2>Особенность пространства?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="fireplace"><img src="https://images.unsplash.com/photo-1613553429598-383b40523555?auto=format&fit=crop&w=300&q=80"><span>Камин</span></div>
-                <div class="option-card" data-value="reading_nook"><img src="https://images.unsplash.com/photo-1544228865-7d73678c0f28?auto=format&fit=crop&w=300&q=80"><span>Уголок для чтения</span></div>
-                <div class="option-card" data-value="workspace"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80"><span>Рабочее место</span></div>
-                <div class="option-card" data-value="window"><img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=300&q=80"><span>Большое окно</span></div>
-            </div>
-        </div>
+            const questionKey = parseInt(option.closest('.question').dataset.question, 10);
+            
+            option.parentElement.querySelectorAll('.quiz-option-card').forEach(card => card.classList.remove('selected'));
+            option.classList.add('selected');
 
-        <div class="question" data-question="10">
-            <h2>Финальный штрих?</h2>
-            <div class="options-grid">
-                <div class="option-card" data-value="smart_home"><img src="https://images.unsplash.com/photo-1605470207869-5c94a219154a?auto=format&fit=crop&w=300&q=80"><span>Умный дом</span></div>
-                <div class="option-card" data-value="eco"><img src="https://images.unsplash.com/photo-1627993312204-a2faaf37d0c3?auto=format&fit=crop&w=300&q=80"><span>Эко-материалы</span></div>
-                <div class="option-card" data-value="audio"><img src="https://images.unsplash.com/photo-1593361184931-f62d16453f86?auto=format&fit=crop&w=300&q=80"><span>Аудиосистема</span></div>
-                <div class="option-card" data-value="aroma"><img src="https://images.unsplash.com/photo-1612293428542-88b838341434?auto=format&fit=crop&w=300&q=80"><span>Ароматы</span></div>
-            </div>
-        </div>
-    </main>
+            userSelections[questionKey] = option.dataset.value;
+            
+            setTimeout(() => {
+                if (currentQuestion < quizData.length - 1) {
+                    currentQuestion++;
+                    renderQuestion(currentQuestion);
+                } else {
+                    updateUI();
+                }
+            }, 350);
+        });
 
-    <footer class="navigation">
-        <button id="prevBtn" class="nav-button">Назад</button>
-        <button id="nextBtn" class="nav-button" disabled>Далее</button>
-        <button id="generateBtn" class="nav-button" disabled>✨ Сгенерировать</button>
-    </footer>
-</div>
+        generateBtn.addEventListener('click', () => {
+            if(userSelections[quizData.length]){
+                console.log("Результаты квиза:", userSelections);
+                alert('Отлично! Отправляем ваши предпочтения боту. (Смотри консоль)');
+                // window.Telegram.WebApp.sendData(JSON.stringify(userSelections));
+            }
+        });
 
-<script>
-    const questions=document.querySelectorAll(".question"),quiz=document.getElementById("quiz"),prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn"),generateBtn=document.getElementById("generateBtn"),progressBar=document.getElementById("progressBar"),stepCounter=document.getElementById("stepCounter");let currentQuestion=0;const userSelections={};function updateUI(){questions.forEach((e,t)=>{e.classList.toggle("active",t===currentQuestion)});const e=currentQuestion+1,t=(e/questions.length)*100;progressBar.style.width=`${t}%`,stepCounter.textContent=`Шаг ${e} из ${questions.length}`,prevBtn.style.display=currentQuestion>0?"block":"none",nextBtn.style.display=currentQuestion<questions.length-1?"block":"none",generateBtn.style.display=currentQuestion===questions.length-1?"block":"none";const o=userSelections[e];nextBtn.disabled=!o,generateBtn.disabled=!o}quiz.addEventListener("click",e=>{const t=e.target.closest(".option-card");if(!t)return;const o=t.closest(".question"),n=parseInt(o.dataset.question,10);o.querySelectorAll(".option-card").forEach(e=>{e.classList.remove("selected")}),t.classList.add("selected"),userSelections[n]=t.dataset.value,nextBtn.disabled=!1,currentQuestion===questions.length-1&&(generateBtn.disabled=!1),setTimeout(()=>{currentQuestion<questions.length-1&&nextBtn.click()},350)}),nextBtn.addEventListener("click",()=>{currentQuestion<questions.length-1&&(currentQuestion++,updateUI())}),prevBtn.addEventListener("click",()=>{currentQuestion>0&&(currentQuestion--,updateUI())}),generateBtn.addEventListener("click",()=>{userSelections[questions.length]&&(console.log("Результаты квиза:",userSelections),alert("Отлично! Отправляем ваши предпочтения боту."))}),updateUI();
-</script>
-
+        // Первая отрисовка квиза при запуске
+        renderQuestion(0);
+    </script>
 </body>
 </html>
