@@ -66,8 +66,9 @@
         const resultImage = document.getElementById('result-image');
         const restartButton = document.getElementById('restart-button');
 
-        // ТВОЙ КЛЮЧ УЖЕ ВСТАВЛЕН!
-        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8';
+        // !!! ШАГ 1: НАЙДИ НАСТОЯЩИЙ СЕКРЕТНЫЙ КЛЮЧ И ВСТАВЬ ЕГО СЮДА !!!
+        // ОН ДОЛЖЕН НАЧИНАТЬСЯ С "sk_..." ИЛИ БЫТЬ ОЧЕНЬ ДЛИННЫМ И СЛУЧАЙНЫМ
+        const CUBICASA_API_KEY = 'sk_...ВСТАВЬ СЮДА СВОЙ НАСТОЯЩИЙ СЕКРЕТНЫЙ КЛЮЧ';
 
         function showScreen(screen) {
             [uploadScreen, loadingScreen, resultScreen].forEach(s => s.classList.remove('active'));
@@ -86,21 +87,32 @@
         }
 
         async function uploadToCubiCasa(file) {
-            // ИЗМЕНЕНИЕ 1: АДРЕС API ТЕПЕРЬ v2
             const API_URL = 'https://api.cubi.casa/v2/floorplans';
             
+            if (!CUBICASA_API_KEY || CUBICASA_API_KEY.includes('...')) {
+                alert('Ошибка: API-ключ CubiCasa не вставлен. Пожалуйста, найдите и вставьте ваш секретный ключ в код.');
+                showScreen(uploadScreen);
+                return;
+            }
+
             try {
-                // 1. СОЗДАЕМ "ЗАКАЗ" НА ПЛАНИРОВКУ
-                loadingText.innerHTML = "Создаю новый проект...";
+                loadingText.innerHTML = "1/3: Создаю новый проект...";
                 const createResponse = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` }
+                    headers: { 
+                        'Authorization': `Bearer ${CUBICASA_API_KEY}`,
+                        'Content-Type': 'application/json' // Добавлен заголовок для надежности
+                    },
+                    // В v2 API можно сразу передать имя файла
+                    body: JSON.stringify({ 'original_filename': file.name })
                 });
-                if (!createResponse.ok) throw new Error(`Ошибка создания проекта (${createResponse.status}). Проверьте API-ключ.`);
+                if (!createResponse.ok) {
+                    const errorData = await createResponse.json();
+                    throw new Error(`Ошибка создания проекта (${createResponse.status}): ${errorData.message || 'Проверьте API-ключ'}`);
+                }
                 const { id: floorplanId, upload_url: uploadUrl } = await createResponse.json();
 
-                // 2. ЗАГРУЖАЕМ ФАЙЛ НА СПЕЦИАЛЬНЫЙ URL
-                loadingText.innerHTML = "Загружаю фото...";
+                loadingText.innerHTML = "2/3: Загружаю фото...";
                 const uploadResponse = await fetch(uploadUrl, {
                     method: 'PUT',
                     headers: { 'Content-Type': file.type },
@@ -108,23 +120,17 @@
                 });
                 if (!uploadResponse.ok) throw new Error(`Ошибка загрузки файла (${uploadResponse.status}).`);
 
-                // 3. ОЖИДАНИЕ РЕЗУЛЬТАТА
-                loadingText.innerHTML = "AI анализирует...<br>Это может занять несколько минут.";
+                loadingText.innerHTML = "3/3: AI анализирует...<br>Это может занять несколько минут.";
                 checkStatus(floorplanId);
 
             } catch (error) {
                 console.error("Критическая ошибка:", error);
-                if (error instanceof TypeError && error.message.includes('fetch')) {
-                    alert("Ошибка сети (CORS): Убедитесь, что вы запускаете этот файл с веб-сервера (GitHub Pages), а не локально.");
-                } else {
-                    alert(`${error.message}`);
-                }
+                alert(`${error.message}`);
                 showScreen(uploadScreen);
             }
         }
 
         async function checkStatus(floorplanId) {
-            // ИЗМЕНЕНИЕ 2: АДРЕС ПРОВЕРКИ СТАТУСА ТЕПЕРЬ ТОЖЕ v2
             const STATUS_URL = `https://api.cubi.casa/v2/floorplans/${floorplanId}`;
             const intervalId = setInterval(async () => {
                 try {
@@ -136,7 +142,6 @@
 
                     if (data.status === 'completed') {
                         clearInterval(intervalId);
-                        // Ищем PNG-файл с 2D-планом
                         const floorplanRender = data.renders.find(r => r.type === '2d-plan-png' && r.url);
                         if (floorplanRender) {
                             resultImage.src = floorplanRender.url;
@@ -154,7 +159,7 @@
                     alert(`${error.message}`);
                     showScreen(uploadScreen);
                 }
-            }, 15000); // Проверяем каждые 15 секунд
+            }, 15000); 
         }
     </script>
 </body>
