@@ -5,104 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Floor Plan AI</title>
     <style>
-        :root {
-            --bg-color: #0d0d0f;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1a6;
-            --accent-color: #30d158; /* Зеленый, как "успех" */
-            --glass-bg: rgba(30, 30, 32, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        /* --- Анимации и фон (как в прошлый раз) --- */
+        /* CSS ОСТАЕТСЯ ОДИН В ОДИН, КАК В ПРОШЛОМ КОДЕ. Я его скрою для краткости, но он здесь. */
+        :root { --bg-color: #0d0d0f; --text-primary: #ffffff; --text-secondary: #a1a1a6; --accent-color: #30d158; --glass-bg: rgba(30, 30, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --shadow-color: rgba(0, 0, 0, 0.3); --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes move-light1 { 0%, 100% { transform: translate(10vw, -10vh); } 50% { transform: translate(70vw, 80vh); } }
         @keyframes move-light2 { 0%, 100% { transform: translate(80vw, 90vh); } 50% { transform: translate(10vw, 20vh); } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            margin: 0; padding: 20px;
-            display: flex; justify-content: center; align-items: center; min-height: 100vh;
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-primary); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .background-lights { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .light { position: absolute; border-radius: 50%; opacity: 0.4; filter: blur(150px); }
         .light.one { width: 500px; height: 500px; background: #007aff; animation: move-light1 25s infinite ease-in-out; }
         .light.two { width: 400px; height: 400px; background: var(--accent-color); animation: move-light2 20s infinite ease-in-out; }
-
-        /* --- Стеклянная панель --- */
-        .glass-panel {
-            width: 100%; max-width: 450px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 35px;
-            -webkit-backdrop-filter: blur(50px);
-            backdrop-filter: blur(50px);
-            box-shadow: 0 20px 50px var(--shadow-color);
-            text-align: center;
-            animation: fadeIn 0.6s var(--animation-curve);
-        }
-        
-        /* --- Все "Экраны" внутри панели --- */
+        .glass-panel { width: 100%; max-width: 450px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 35px; -webkit-backdrop-filter: blur(50px); backdrop-filter: blur(50px); box-shadow: 0 20px 50px var(--shadow-color); text-align: center; animation: fadeIn 0.6s var(--animation-curve); }
         .screen-content { display: none; }
         .screen-content.active { display: block; }
-        
-        /* --- 1. Экран Загрузки (Upload) --- */
         #upload-screen h2 { font-size: 24px; margin: 0 0 10px 0; }
         #upload-screen p { color: var(--text-secondary); margin: 0 0 30px 0; line-height: 1.5; }
-
-        .upload-area {
-            border: 2px dashed var(--text-secondary);
-            border-radius: 20px;
-            padding: 40px 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .upload-area:hover {
-            border-color: var(--accent-color);
-            background: rgba(48, 209, 88, 0.1);
-        }
+        .upload-area { border: 2px dashed var(--text-secondary); border-radius: 20px; padding: 40px 20px; cursor: pointer; transition: all 0.2s ease; }
+        .upload-area:hover { border-color: var(--accent-color); background: rgba(48, 209, 88, 0.1); }
         .upload-icon { font-size: 40px; }
         .upload-area span { display: block; margin-top: 15px; font-weight: 500; }
         #file-input { display: none; }
-
-        /* --- 2. Экран Обработки (Loading) --- */
-        .loader {
-            width: 60px; height: 60px;
-            border: 4px solid var(--glass-border);
-            border-top-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px auto;
-        }
+        .loader { width: 60px; height: 60px; border: 4px solid var(--glass-border); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto; }
         #loading-screen p { font-size: 18px; font-weight: 500; color: var(--text-secondary); }
-
-        /* --- 3. Экран Результата (Result) --- */
         #result-screen h2 { font-size: 24px; margin: 0 0 15px 0; }
-        .result-image-container {
-            width: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            background: #000;
-        }
+        .result-image-container { width: 100%; border-radius: 20px; overflow: hidden; margin-bottom: 25px; background: #000; }
         #result-image { width: 100%; display: block; }
-        .restart-button {
-            width: 100%;
-            background: var(--glass-border);
-            color: var(--text-primary);
-            border: none; border-radius: 14px;
-            padding: 16px 0; font-size: 17px; font-weight: 600; cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
+        .restart-button { width: 100%; background: var(--glass-border); color: var(--text-primary); border: none; border-radius: 14px; padding: 16px 0; font-size: 17px; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
         .restart-button:hover { background: rgba(255, 255, 255, 0.2); }
-
     </style>
 </head>
 <body>
@@ -113,8 +43,6 @@
     </div>
 
     <div class="glass-panel">
-        
-        <!-- ЭКРАН 1: ЗАГРУЗКА ФОТО -->
         <div id="upload-screen" class="screen-content active">
             <h2>AI Floor Plan</h2>
             <p>Загрузите фотографию вашей комнаты, и наш ИИ построит её планировку.</p>
@@ -124,116 +52,135 @@
             </div>
             <input type="file" id="file-input" accept="image/*">
         </div>
-
-        <!-- ЭКРАН 2: ОБРАБОТКА -->
         <div id="loading-screen" class="screen-content">
             <div class="loader"></div>
-            <p>AI анализирует пространство... <br>Это может занять до 30 секунд.</p>
+            <p id="loading-text">AI анализирует пространство... <br>Это может занять до 30 секунд.</p>
         </div>
-
-        <!-- ЭКРАН 3: РЕЗУЛЬТАТ -->
         <div id="result-screen" class="screen-content">
             <h2>Ваша планировка готова!</h2>
-            <div class="result-image-container">
-                <img id="result-image" src="" alt="Сгенерированная планировка">
-            </div>
+            <div class="result-image-container"><img id="result-image" src="" alt="Сгенерированная планировка"></div>
             <button id="restart-button" class="restart-button">Попробовать еще раз</button>
         </div>
-
     </div>
 
     <script>
+        // --- Получаем доступ к элементам DOM ---
         const uploadScreen = document.getElementById('upload-screen');
         const loadingScreen = document.getElementById('loading-screen');
         const resultScreen = document.getElementById('result-screen');
-        
+        const loadingText = document.getElementById('loading-text');
         const uploadArea = document.getElementById('upload-area');
         const fileInput = document.getElementById('file-input');
         const resultImage = document.getElementById('result-image');
         const restartButton = document.getElementById('restart-button');
 
+        // --- ВСТАВЬ СЮДА СВОЙ КЛЮЧ ---
+        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8'; 
+
         // --- Функции для переключения экранов ---
         function showScreen(screen) {
-            uploadScreen.classList.remove('active');
-            loadingScreen.classList.remove('active');
-            resultScreen.classList.remove('active');
+            [uploadScreen, loadingScreen, resultScreen].forEach(s => s.classList.remove('active'));
             screen.classList.add('active');
         }
 
         // --- Обработчики событий ---
         uploadArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileUpload);
-        restartButton.addEventListener('click', () => showScreen(uploadScreen));
+        restartButton.addEventListener('click', () => {
+            fileInput.value = ''; // Сбрасываем выбранный файл
+            showScreen(uploadScreen);
+        });
 
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            // 1. Показываем экран загрузки
             showScreen(loadingScreen);
-
-            // 2. *** ИМИТАЦИЯ ЗАПРОСА К API ***
-            // В реальной жизни здесь будет fetch-запрос к API
-            console.log("Начинаем 'отправку' файла в API:", file.name);
+            loadingText.innerHTML = "Загружаю фото на сервер...";
             
-            setTimeout(() => {
-                console.log("Получили 'ответ' от API.");
-                
-                // 3. Показываем результат
-                // ВАЖНО: Эту ссылку нужно будет заменить на РЕАЛЬНУЮ ссылку, которую вернет API
-                const exampleImageUrl = "https://i.imgur.com/gBF2B3D.png"; // Пример планировки
-                resultImage.src = exampleImageUrl;
-
-                resultImage.onload = () => {
-                    showScreen(resultScreen);
-                };
-
-            }, 5000); // 5 секунд имитации работы
+            // Запускаем реальный процесс работы с API
+            uploadToCubiCasa(file);
         }
 
-        /*
-        // --- КАК БУДЕТ ВЫГЛЯДЕТЬ РЕАЛЬНЫЙ ЗАПРОС К API (пример для CubiCasa) ---
-
-        async function uploadToRealApi(file) {
-            const apiKey = 'ВАШ_КЛЮЧ_API_ОТ_CUBICASA';
-            const url = 'https://api.cubi.casa/v1/floorplans';
-
-            const formData = new FormData();
-            formData.append('file', file);
-            // formData.append('other_options', 'value'); // Другие параметры, если нужны
-
+        // --- РЕАЛЬНАЯ РАБОТА С API CUBICASA ---
+        async function uploadToCubiCasa(file) {
+            const AUTH_URL = 'https://api.cubi.casa/v1/auth/export-token';
+            const UPLOAD_URL = 'https://api.cubi.casa/v1/floorplans';
+            
             try {
-                const response = await fetch(url, {
+                // 1. Получаем временный токен для загрузки
+                loadingText.innerHTML = "Авторизация...";
+                const authResponse = await fetch(AUTH_URL, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`
-                    },
+                    headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` }
+                });
+                if (!authResponse.ok) throw new Error('Ошибка авторизации');
+                const { 'export-token': exportToken } = await authResponse.json();
+
+                // 2. Создаем "заказ" на планировку
+                const formData = new FormData();
+                formData.append('file', file);
+
+                loadingText.innerHTML = "Создаю заказ на планировку...";
+                const uploadResponse = await fetch(UPLOAD_URL, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${exportToken}` },
                     body: formData
                 });
+                if (!uploadResponse.ok) throw new Error('Ошибка создания заказа');
+                const uploadData = await uploadResponse.json();
+                const floorplanId = uploadData.id;
+                console.log('Заказ создан, ID:', floorplanId);
 
-                if (!response.ok) {
-                    throw new Error(`Ошибка API: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log("Реальный ответ от API:", data);
-
-                // Предположим, API возвращает URL картинки в поле data.floorplan_url
-                resultImage.src = data.floorplan_url;
-                showScreen(resultScreen);
+                // 3. Ждем, пока планировка сгенерируется
+                loadingText.innerHTML = "AI анализирует...<br>Обычно это занимает несколько минут.";
+                checkStatus(exportToken, floorplanId);
 
             } catch (error) {
-                console.error("Ошибка при запросе к API:", error);
-                alert("Произошла ошибка. Попробуйте позже.");
-                showScreen(uploadScreen); // Возвращаем на первый экран
+                console.error("Ошибка на этапе загрузки:", error);
+                alert(`Произошла ошибка: ${error.message}. Попробуйте снова.`);
+                showScreen(uploadScreen);
             }
         }
-        
-        // И тогда в handleFileUpload вместо setTimeout нужно будет вызвать:
-        // uploadToRealApi(file);
-        */
 
+        // 4. Периодически проверяем статус готовности
+        async function checkStatus(token, floorplanId) {
+            const STATUS_URL = `https://api.cubi.casa/v1/floorplans/${floorplanId}`;
+
+            const intervalId = setInterval(async () => {
+                try {
+                    const response = await fetch(STATUS_URL, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    console.log('Текущий статус:', data.status);
+
+                    if (data.status === 'completed') {
+                        clearInterval(intervalId);
+                        console.log('Планировка готова!', data);
+                        
+                        // Ищем ссылку на нужный рендер (например, 2D-план)
+                        const floorplanRender = data.renders.find(r => r.type === '2d-plan');
+                        if (floorplanRender) {
+                            resultImage.src = floorplanRender.url;
+                            showScreen(resultScreen);
+                        } else {
+                            throw new Error('Не удалось найти 2D-рендер в ответе API.');
+                        }
+                    } else if (data.status === 'failed') {
+                        clearInterval(intervalId);
+                        throw new Error('AI не смог обработать фото.');
+                    }
+                    // Если статус 'processing' или другой, просто ждем дальше
+
+                } catch (error) {
+                    clearInterval(intervalId);
+                    console.error("Ошибка при проверке статуса:", error);
+                    alert(`Произошла ошибка: ${error.message}.`);
+                    showScreen(uploadScreen);
+                }
+            }, 10000); // Проверяем каждые 10 секунд
+        }
     </script>
-
 </body>
 </html>
