@@ -86,37 +86,31 @@
         }
 
         async function uploadToCubiCasa(file) {
-            // ВАЖНО: Эти URL могут не работать с локального файла из-за CORS. 
-            // Код нужно запускать с веб-сервера (например, GitHub Pages).
-            const AUTH_URL = 'https://api.cubi.casa/v1/auth/export-token';
-            const UPLOAD_URL = 'https://api.cubi.casa/v1/floorplans';
+            // ГЛАВНЫЙ URL API
+            const API_URL = 'https://api.cubi.casa/v1/floorplans';
             
             try {
-                // 1. АВТОРИЗАЦИЯ
-                loadingText.innerHTML = "Авторизация...";
-                const authResponse = await fetch(AUTH_URL, {
+                // 1. СОЗДАЕМ "ЗАКАЗ" НА ПЛАНИРОВКУ
+                loadingText.innerHTML = "Создаю новый проект...";
+                const createResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` }
                 });
-                if (!authResponse.ok) throw new Error(`Ошибка авторизации (${authResponse.status}). Проверьте API-ключ.`);
-                const { 'export-token': exportToken } = await authResponse.json();
+                if (!createResponse.ok) throw new Error(`Ошибка создания проекта (${createResponse.status}). Проверьте API-ключ.`);
+                const { id: floorplanId, upload_url: uploadUrl } = await createResponse.json();
 
-                // 2. ЗАГРУЗКА ФАЙЛА
-                loadingText.innerHTML = "Загружаю фото на сервер...";
-                const formData = new FormData();
-                formData.append('file', file);
-                const uploadResponse = await fetch(UPLOAD_URL, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${exportToken}` },
-                    body: formData
+                // 2. ЗАГРУЖАЕМ ФАЙЛ НА СПЕЦИАЛЬНЫЙ URL
+                loadingText.innerHTML = "Загружаю фото...";
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': file.type },
+                    body: file
                 });
                 if (!uploadResponse.ok) throw new Error(`Ошибка загрузки файла (${uploadResponse.status}).`);
-                const uploadData = await uploadResponse.json();
-                const floorplanId = uploadData.id;
 
                 // 3. ОЖИДАНИЕ РЕЗУЛЬТАТА
                 loadingText.innerHTML = "AI анализирует...<br>Это может занять несколько минут.";
-                checkStatus(exportToken, floorplanId);
+                checkStatus(floorplanId);
 
             } catch (error) {
                 console.error("Критическая ошибка:", error);
@@ -129,11 +123,13 @@
             }
         }
 
-        async function checkStatus(token, floorplanId) {
+        async function checkStatus(floorplanId) {
             const STATUS_URL = `https://api.cubi.casa/v1/floorplans/${floorplanId}`;
             const intervalId = setInterval(async () => {
                 try {
-                    const response = await fetch(STATUS_URL, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const response = await fetch(STATUS_URL, { 
+                        headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` } 
+                    });
                     if (!response.ok) throw new Error(`Ошибка при проверке статуса (${response.status})`);
                     const data = await response.json();
 
