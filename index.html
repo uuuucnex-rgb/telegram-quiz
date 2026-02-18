@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Floor Plan AI</title>
     <style>
-        /* CSS ОДИН В ОДИН, КАК ТЫ ПРОСИЛ. ОН ИДЕАЛЕН. */
+        /* CSS ОДИН В ОДИН. ОН ИДЕАЛЕН. */
         :root { --bg-color: #0d0d0f; --text-primary: #ffffff; --text-secondary: #a1a1a6; --accent-color: #30d158; --glass-bg: rgba(30, 30, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --shadow-color: rgba(0, 0, 0, 0.3); --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes move-light1 { 0%, 100% { transform: translate(10vw, -10vh); } 50% { transform: translate(70vw, 80vh); } }
@@ -43,11 +43,11 @@
                 <div class="upload-icon">📷</div>
                 <span>Нажмите, чтобы загрузить фото</span>
             </div>
-            <input type="file" id="file-input" accept="image/*">
+            <input type="file" id="file-input" accept="image/*,video/*">
         </div>
         <div id="loading-screen" class="screen-content">
             <div class="loader"></div>
-            <p id="loading-text">AI анализирует пространство...</p>
+            <p id="loading-text">...</p>
         </div>
         <div id="result-screen" class="screen-content">
             <h2>Ваша планировка готова!</h2>
@@ -86,8 +86,8 @@
         }
 
         async function uploadToCubiCasa(file) {
-            // ГЛАВНЫЙ URL API
-            const API_URL = 'https://api.cubi.casa/v1/floorplans';
+            // ИЗМЕНЕНИЕ 1: АДРЕС API ТЕПЕРЬ v2
+            const API_URL = 'https://api.cubi.casa/v2/floorplans';
             
             try {
                 // 1. СОЗДАЕМ "ЗАКАЗ" НА ПЛАНИРОВКУ
@@ -114,8 +114,8 @@
 
             } catch (error) {
                 console.error("Критическая ошибка:", error);
-                if (error instanceof TypeError && error.message === 'Failed to fetch') {
-                    alert("Ошибка сети (CORS): Пожалуйста, запустите этот файл с веб-сервера (GitHub Pages), а не локально.");
+                if (error instanceof TypeError && error.message.includes('fetch')) {
+                    alert("Ошибка сети (CORS): Убедитесь, что вы запускаете этот файл с веб-сервера (GitHub Pages), а не локально.");
                 } else {
                     alert(`${error.message}`);
                 }
@@ -124,7 +124,8 @@
         }
 
         async function checkStatus(floorplanId) {
-            const STATUS_URL = `https://api.cubi.casa/v1/floorplans/${floorplanId}`;
+            // ИЗМЕНЕНИЕ 2: АДРЕС ПРОВЕРКИ СТАТУСА ТЕПЕРЬ ТОЖЕ v2
+            const STATUS_URL = `https://api.cubi.casa/v2/floorplans/${floorplanId}`;
             const intervalId = setInterval(async () => {
                 try {
                     const response = await fetch(STATUS_URL, { 
