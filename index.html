@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Floor Plan AI</title>
     <style>
-        /* CSS ОСТАЕТСЯ ОДИН В ОДИН, КАК В ПРОШЛОМ КОДЕ. Я его скрою для краткости, но он здесь. */
+        /* CSS ОСТАЕТСЯ ОДИН В ОДИН, КАК В ПРОШЛОМ КОДЕ. ОН ИДЕАЛЕН. */
         :root { --bg-color: #0d0d0f; --text-primary: #ffffff; --text-secondary: #a1a1a6; --accent-color: #30d158; --glass-bg: rgba(30, 30, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --shadow-color: rgba(0, 0, 0, 0.3); --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes move-light1 { 0%, 100% { transform: translate(10vw, -10vh); } 50% { transform: translate(70vw, 80vh); } }
@@ -36,12 +36,7 @@
     </style>
 </head>
 <body>
-
-    <div class="background-lights">
-        <div class="light one"></div>
-        <div class="light two"></div>
-    </div>
-
+    <div class="background-lights"><div class="light one"></div><div class="light two"></div></div>
     <div class="glass-panel">
         <div id="upload-screen" class="screen-content active">
             <h2>AI Floor Plan</h2>
@@ -54,7 +49,7 @@
         </div>
         <div id="loading-screen" class="screen-content">
             <div class="loader"></div>
-            <p id="loading-text">AI анализирует пространство... <br>Это может занять до 30 секунд.</p>
+            <p id="loading-text">AI анализирует пространство...</p>
         </div>
         <div id="result-screen" class="screen-content">
             <h2>Ваша планировка готова!</h2>
@@ -64,7 +59,6 @@
     </div>
 
     <script>
-        // --- Получаем доступ к элементам DOM ---
         const uploadScreen = document.getElementById('upload-screen');
         const loadingScreen = document.getElementById('loading-screen');
         const resultScreen = document.getElementById('result-screen');
@@ -74,93 +68,86 @@
         const resultImage = document.getElementById('result-image');
         const restartButton = document.getElementById('restart-button');
 
-        // --- ВСТАВЬ СЮДА СВОЙ КЛЮЧ ---
-        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8'; 
+        // !!! ВСТАВЬ СЮДА СВОЙ СЕКРЕТНЫЙ КЛЮЧ !!!
+        // ОН ДОЛЖЕН НАЧИНАТЬСЯ С "sk_..." ИЛИ БЫТЬ В РАЗДЕЛЕ "API CREDENTIALS"
+        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8'; // Я ОСТАВЛЮ ТВОЙ КЛЮЧ, НО ЕГО НУЖНО ЗАМЕНИТЬ!
 
-        // --- Функции для переключения экранов ---
         function showScreen(screen) {
             [uploadScreen, loadingScreen, resultScreen].forEach(s => s.classList.remove('active'));
             screen.classList.add('active');
         }
 
-        // --- Обработчики событий ---
         uploadArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileUpload);
-        restartButton.addEventListener('click', () => {
-            fileInput.value = ''; // Сбрасываем выбранный файл
-            showScreen(uploadScreen);
-        });
+        restartButton.addEventListener('click', () => { fileInput.value = ''; showScreen(uploadScreen); });
 
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             showScreen(loadingScreen);
-            loadingText.innerHTML = "Загружаю фото на сервер...";
             
-            // Запускаем реальный процесс работы с API
+            // Запускаем РЕАЛЬНЫЙ процесс
             uploadToCubiCasa(file);
         }
 
-        // --- РЕАЛЬНАЯ РАБОТА С API CUBICASA ---
         async function uploadToCubiCasa(file) {
             const AUTH_URL = 'https://api.cubi.casa/v1/auth/export-token';
             const UPLOAD_URL = 'https://api.cubi.casa/v1/floorplans';
             
+            if (!CUBICASA_API_KEY || CUBICASA_API_KEY.includes('ТВОЙ_API_КЛЮЧ')) {
+                alert('Ошибка: API-ключ CubiCasa не вставлен. Пожалуйста, вставьте свой секретный ключ в код.');
+                showScreen(uploadScreen);
+                return;
+            }
+
             try {
-                // 1. Получаем временный токен для загрузки
+                // 1. АВТОРИЗАЦИЯ
                 loadingText.innerHTML = "Авторизация...";
                 const authResponse = await fetch(AUTH_URL, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` }
                 });
-                if (!authResponse.ok) throw new Error('Ошибка авторизации');
+                if (!authResponse.ok) {
+                    throw new Error(`Ошибка авторизации (${authResponse.status}). Проверьте правильность СЕКРЕТНОГО API-ключа.`);
+                }
                 const { 'export-token': exportToken } = await authResponse.json();
 
-                // 2. Создаем "заказ" на планировку
+                // 2. ЗАГРУЗКА ФАЙЛА
+                loadingText.innerHTML = "Загружаю фото на сервер...";
                 const formData = new FormData();
                 formData.append('file', file);
-
-                loadingText.innerHTML = "Создаю заказ на планировку...";
                 const uploadResponse = await fetch(UPLOAD_URL, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${exportToken}` },
                     body: formData
                 });
-                if (!uploadResponse.ok) throw new Error('Ошибка создания заказа');
+                if (!uploadResponse.ok) throw new Error(`Ошибка загрузки файла (${uploadResponse.status}).`);
                 const uploadData = await uploadResponse.json();
                 const floorplanId = uploadData.id;
-                console.log('Заказ создан, ID:', floorplanId);
 
-                // 3. Ждем, пока планировка сгенерируется
-                loadingText.innerHTML = "AI анализирует...<br>Обычно это занимает несколько минут.";
+                // 3. ОЖИДАНИЕ РЕЗУЛЬТАТА
+                loadingText.innerHTML = "AI анализирует...<br>Это может занять несколько минут.";
                 checkStatus(exportToken, floorplanId);
 
             } catch (error) {
-                console.error("Ошибка на этапе загрузки:", error);
-                alert(`Произошла ошибка: ${error.message}. Попробуйте снова.`);
+                console.error("Ошибка:", error);
+                alert(`${error.message}`);
                 showScreen(uploadScreen);
             }
         }
 
-        // 4. Периодически проверяем статус готовности
         async function checkStatus(token, floorplanId) {
             const STATUS_URL = `https://api.cubi.casa/v1/floorplans/${floorplanId}`;
-
             const intervalId = setInterval(async () => {
                 try {
-                    const response = await fetch(STATUS_URL, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const response = await fetch(STATUS_URL, { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (!response.ok) throw new Error(`Ошибка при проверке статуса (${response.status})`);
                     const data = await response.json();
-                    console.log('Текущий статус:', data.status);
 
                     if (data.status === 'completed') {
                         clearInterval(intervalId);
-                        console.log('Планировка готова!', data);
-                        
-                        // Ищем ссылку на нужный рендер (например, 2D-план)
-                        const floorplanRender = data.renders.find(r => r.type === '2d-plan');
+                        const floorplanRender = data.renders.find(r => r.type === '2d-plan-png'); // Ищем PNG-файл
                         if (floorplanRender) {
                             resultImage.src = floorplanRender.url;
                             showScreen(resultScreen);
@@ -169,17 +156,15 @@
                         }
                     } else if (data.status === 'failed') {
                         clearInterval(intervalId);
-                        throw new Error('AI не смог обработать фото.');
+                        throw new Error('AI не смог обработать фото. Попробуйте другое изображение.');
                     }
-                    // Если статус 'processing' или другой, просто ждем дальше
-
                 } catch (error) {
                     clearInterval(intervalId);
-                    console.error("Ошибка при проверке статуса:", error);
-                    alert(`Произошла ошибка: ${error.message}.`);
+                    console.error("Ошибка:", error);
+                    alert(`${error.message}`);
                     showScreen(uploadScreen);
                 }
-            }, 10000); // Проверяем каждые 10 секунд
+            }, 15000); // Проверяем каждые 15 секунд, чтобы не спамить API
         }
     </script>
 </body>
