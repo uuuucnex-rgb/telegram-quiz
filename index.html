@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Floor Plan AI</title>
     <style>
-        /* CSS ОСТАЕТСЯ ОДИН В ОДИН, КАК В ПРОШЛОМ КОДЕ. ОН ИДЕАЛЕН. */
+        /* CSS ОДИН В ОДИН, КАК ТЫ ПРОСИЛ. ОН ИДЕАЛЕН. */
         :root { --bg-color: #0d0d0f; --text-primary: #ffffff; --text-secondary: #a1a1a6; --accent-color: #30d158; --glass-bg: rgba(30, 30, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --shadow-color: rgba(0, 0, 0, 0.3); --animation-curve: cubic-bezier(0.2, 0.8, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes move-light1 { 0%, 100% { transform: translate(10vw, -10vh); } 50% { transform: translate(70vw, 80vh); } }
@@ -19,16 +19,14 @@
         .glass-panel { width: 100%; max-width: 450px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 35px; -webkit-backdrop-filter: blur(50px); backdrop-filter: blur(50px); box-shadow: 0 20px 50px var(--shadow-color); text-align: center; animation: fadeIn 0.6s var(--animation-curve); }
         .screen-content { display: none; }
         .screen-content.active { display: block; }
-        #upload-screen h2 { font-size: 24px; margin: 0 0 10px 0; }
-        #upload-screen p { color: var(--text-secondary); margin: 0 0 30px 0; line-height: 1.5; }
+        h2 { font-size: 24px; margin: 0 0 10px 0; }
+        p { color: var(--text-secondary); margin: 0 0 30px 0; line-height: 1.5; }
         .upload-area { border: 2px dashed var(--text-secondary); border-radius: 20px; padding: 40px 20px; cursor: pointer; transition: all 0.2s ease; }
         .upload-area:hover { border-color: var(--accent-color); background: rgba(48, 209, 88, 0.1); }
         .upload-icon { font-size: 40px; }
         .upload-area span { display: block; margin-top: 15px; font-weight: 500; }
         #file-input { display: none; }
         .loader { width: 60px; height: 60px; border: 4px solid var(--glass-border); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto; }
-        #loading-screen p { font-size: 18px; font-weight: 500; color: var(--text-secondary); }
-        #result-screen h2 { font-size: 24px; margin: 0 0 15px 0; }
         .result-image-container { width: 100%; border-radius: 20px; overflow: hidden; margin-bottom: 25px; background: #000; }
         #result-image { width: 100%; display: block; }
         .restart-button { width: 100%; background: var(--glass-border); color: var(--text-primary); border: none; border-radius: 14px; padding: 16px 0; font-size: 17px; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; }
@@ -68,9 +66,8 @@
         const resultImage = document.getElementById('result-image');
         const restartButton = document.getElementById('restart-button');
 
-        // !!! ВСТАВЬ СЮДА СВОЙ СЕКРЕТНЫЙ КЛЮЧ !!!
-        // ОН ДОЛЖЕН НАЧИНАТЬСЯ С "sk_..." ИЛИ БЫТЬ В РАЗДЕЛЕ "API CREDENTIALS"
-        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8'; // Я ОСТАВЛЮ ТВОЙ КЛЮЧ, НО ЕГО НУЖНО ЗАМЕНИТЬ!
+        // ТВОЙ КЛЮЧ УЖЕ ВСТАВЛЕН!
+        const CUBICASA_API_KEY = 'c1dac552-dbf9-45c1-a834-7fcdc72a58f8';
 
         function showScreen(screen) {
             [uploadScreen, loadingScreen, resultScreen].forEach(s => s.classList.remove('active'));
@@ -84,23 +81,16 @@
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             showScreen(loadingScreen);
-            
-            // Запускаем РЕАЛЬНЫЙ процесс
             uploadToCubiCasa(file);
         }
 
         async function uploadToCubiCasa(file) {
+            // ВАЖНО: Эти URL могут не работать с локального файла из-за CORS. 
+            // Код нужно запускать с веб-сервера (например, GitHub Pages).
             const AUTH_URL = 'https://api.cubi.casa/v1/auth/export-token';
             const UPLOAD_URL = 'https://api.cubi.casa/v1/floorplans';
             
-            if (!CUBICASA_API_KEY || CUBICASA_API_KEY.includes('ТВОЙ_API_КЛЮЧ')) {
-                alert('Ошибка: API-ключ CubiCasa не вставлен. Пожалуйста, вставьте свой секретный ключ в код.');
-                showScreen(uploadScreen);
-                return;
-            }
-
             try {
                 // 1. АВТОРИЗАЦИЯ
                 loadingText.innerHTML = "Авторизация...";
@@ -108,9 +98,7 @@
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${CUBICASA_API_KEY}` }
                 });
-                if (!authResponse.ok) {
-                    throw new Error(`Ошибка авторизации (${authResponse.status}). Проверьте правильность СЕКРЕТНОГО API-ключа.`);
-                }
+                if (!authResponse.ok) throw new Error(`Ошибка авторизации (${authResponse.status}). Проверьте API-ключ.`);
                 const { 'export-token': exportToken } = await authResponse.json();
 
                 // 2. ЗАГРУЗКА ФАЙЛА
@@ -131,8 +119,12 @@
                 checkStatus(exportToken, floorplanId);
 
             } catch (error) {
-                console.error("Ошибка:", error);
-                alert(`${error.message}`);
+                console.error("Критическая ошибка:", error);
+                if (error instanceof TypeError && error.message === 'Failed to fetch') {
+                    alert("Ошибка сети (CORS): Пожалуйста, запустите этот файл с веб-сервера (GitHub Pages), а не локально.");
+                } else {
+                    alert(`${error.message}`);
+                }
                 showScreen(uploadScreen);
             }
         }
@@ -147,12 +139,13 @@
 
                     if (data.status === 'completed') {
                         clearInterval(intervalId);
-                        const floorplanRender = data.renders.find(r => r.type === '2d-plan-png'); // Ищем PNG-файл
+                        // Ищем PNG-файл с 2D-планом
+                        const floorplanRender = data.renders.find(r => r.type === '2d-plan-png' && r.url);
                         if (floorplanRender) {
                             resultImage.src = floorplanRender.url;
                             showScreen(resultScreen);
                         } else {
-                            throw new Error('Не удалось найти 2D-рендер в ответе API.');
+                            throw new Error('Не удалось найти готовый 2D-рендер в ответе API.');
                         }
                     } else if (data.status === 'failed') {
                         clearInterval(intervalId);
@@ -164,7 +157,7 @@
                     alert(`${error.message}`);
                     showScreen(uploadScreen);
                 }
-            }, 15000); // Проверяем каждые 15 секунд, чтобы не спамить API
+            }, 15000); // Проверяем каждые 15 секунд
         }
     </script>
 </body>
