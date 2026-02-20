@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>InterioAI • ДЕМО</title>
+    <title>HomeCraft 3D — Реальный редактор</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', system-ui, sans-serif; }
-        .app-container { max-width: 428px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .header-gradient { background: linear-gradient(180deg, #f8fafc 0%, #e0f2fe 100%); }
-        .btn-primary { background: linear-gradient(90deg, #6b46c1, #4f46e5); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-primary:active { transform: scale(0.96); }
-        .option-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .option-card:active { transform: scale(0.94); box-shadow: 0 0 0 3px #c4b5fd; }
-        .example-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .example-card:hover { transform: translateY(-4px); }
+        .app-container { max-width: 428px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body class="bg-zinc-950">
@@ -25,349 +19,70 @@
 
     <!-- HEADER -->
     <div class="bg-white border-b px-5 py-4 flex items-center justify-between sticky top-0 z-50">
-        <button onclick="closeApp()" class="text-blue-600 font-semibold text-lg">Закрыть</button>
+        <button onclick="closeApp()" class="text-teal-600 font-semibold text-lg">Закрыть</button>
         <div class="flex items-center gap-2">
             <span class="text-3xl">🏠</span>
             <div>
-                <span class="font-bold text-2xl tracking-tighter">InterioAI</span>
-                <p class="text-[10px] text-emerald-500 -mt-1">ДЕМО ВЕРСИЯ</p>
+                <span class="font-bold text-2xl tracking-tighter text-teal-700">HomeCraft</span>
+                <p class="text-[10px] text-teal-500 -mt-1">3D редактор (GitHub)</p>
             </div>
         </div>
-        <div class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-2xl text-xs font-medium flex items-center gap-1">
-            <i class="fa-solid fa-star"></i> БЕСПЛАТНО
+        <div class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-2xl text-xs font-medium">БЕСПЛАТНО</div>
+    </div>
+
+    <!-- LANDING -->
+    <div id="mainScreen" class="p-6">
+        <div class="text-center mt-8">
+            <h1 class="text-4xl font-bold tracking-tighter text-teal-900">Собери свой дом в 3D</h1>
+            <p class="mt-3 text-zinc-600">Перетаскивай мебель, рисуй стены, смотри в 3D</p>
+        </div>
+
+        <button onclick="openEditor()" 
+                class="mt-12 w-full py-7 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-2xl font-semibold rounded-3xl shadow-2xl flex items-center justify-center gap-4">
+            <i class="fa-solid fa-cube text-3xl"></i>
+            Открыть 3D редактор
+        </button>
+
+        <div class="mt-16 text-center">
+            <p class="text-sm text-zinc-500">На основе открытого проекта <span class="font-medium">Blueprint3D (GitHub)</span></p>
         </div>
     </div>
 
-    <!-- MAIN SCREEN с популярными примерами и профилем -->
-    <div id="mainScreen">
-        <div class="header-gradient pt-10 pb-12 px-6 text-center">
-            <h1 class="text-4xl font-bold tracking-tighter leading-none">Ответьте на 6 вопросов<br>и загрузите фото</h1>
-            <p class="mt-4 text-zinc-600 text-lg">Смотрите как Grok Imagine переделает ваш интерьер</p>
-        </div>
-
-        <div class="px-6 -mt-6">
-            <button onclick="startGenerationFlow()" 
-                    class="btn-primary w-full py-5 text-white text-xl font-semibold rounded-3xl shadow-xl flex items-center justify-center gap-3">
-                <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
-                Начать демо-генерацию
-            </button>
-        </div>
-
-        <!-- Популярные примеры (как в первом скрине) -->
-        <div class="px-6 mt-12">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-xl font-semibold">Популярные примеры</h2>
-                <span onclick="showToast('В полной версии здесь вся галерея')" class="text-blue-600 text-sm font-medium cursor-pointer">Все →</span>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-                <div onclick="showToast('Пример: Минимализм в гостиной')" class="example-card bg-white rounded-3xl overflow-hidden shadow">
-                    <img src="https://picsum.photos/id/1015/400/300" class="w-full h-28 object-cover">
-                    <div class="p-3 text-center text-sm font-medium">Минимализм</div>
-                </div>
-                <div onclick="showToast('Пример: Сканди спальня')" class="example-card bg-white rounded-3xl overflow-hidden shadow">
-                    <img src="https://picsum.photos/id/133/400/300" class="w-full h-28 object-cover">
-                    <div class="p-3 text-center text-sm font-medium">Скандинавский</div>
-                </div>
-                <div onclick="showToast('Пример: Классическая кухня')" class="example-card bg-white rounded-3xl overflow-hidden shadow">
-                    <img src="https://picsum.photos/id/201/400/300" class="w-full h-28 object-cover">
-                    <div class="p-3 text-center text-sm font-medium">Классика</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Плашка профиля (как во втором скрине) -->
-        <div class="mx-6 mt-10 bg-white rounded-3xl p-5 shadow-sm">
-            <p class="text-sm text-zinc-500">Заполните профиль, чтобы получать персонализированные рекомендации</p>
-            <div class="mt-4 bg-zinc-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-violet-600 w-[24%] h-2 rounded-full"></div>
-            </div>
-            <p class="text-xs text-zinc-400 mt-1">24% заполнено</p>
-            <button onclick="showToast('В полной версии откроется форма профиля')" 
-                    class="mt-4 w-full py-3 bg-zinc-900 text-white rounded-2xl font-medium text-sm">Заполнить профиль</button>
-        </div>
-    </div>
-
-    <!-- QUIZ SCREEN с фото вместо смайликов -->
-    <div id="quizScreen" class="hidden fixed inset-0 bg-white z-50 flex flex-col">
-        <div class="px-6 py-5 border-b flex items-center gap-4 bg-white">
-            <button onclick="closeQuiz()" class="text-4xl leading-none text-zinc-300">←</button>
-            <div class="flex-1">
-                <div class="h-1 bg-zinc-100 rounded-full overflow-hidden">
-                    <div id="progressBar" class="h-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full transition-all" style="width: 16.66%"></div>
-                </div>
-            </div>
-            <div id="stepText" class="text-sm font-medium text-zinc-400">1/6</div>
-        </div>
-
-        <div id="questionArea" class="flex-1 px-6 py-8 overflow-auto"></div>
-
-        <div class="p-6 border-t bg-white">
-            <button onclick="nextQuestion()" id="nextBtn"
-                    class="hidden w-full py-4 btn-primary text-white rounded-3xl font-semibold text-lg">Продолжить</button>
-        </div>
-    </div>
-
-    <!-- UPLOAD SCREEN -->
-    <div id="uploadScreen" class="hidden fixed inset-0 bg-white z-50 flex flex-col">
-        <div class="px-6 py-5 border-b flex items-center">
-            <button onclick="closeUpload()" class="text-4xl">←</button>
-            <div class="flex-1 text-center font-semibold text-lg">Загрузите фото помещения</div>
+    <!-- 3D EDITOR SCREEN -->
+    <div id="editorScreen" class="hidden fixed inset-0 bg-zinc-900 flex flex-col z-50">
+        <div class="bg-white px-5 py-4 flex items-center border-b">
+            <button onclick="backToMain()" class="text-3xl text-teal-600">←</button>
+            <div class="flex-1 text-center font-semibold text-teal-700">3D Планировщик интерьера</div>
+            <button onclick="backToMain()" class="text-red-500 text-sm font-medium">Закрыть</button>
         </div>
         
-        <div class="flex-1 flex items-center justify-center px-8">
-            <div id="dropZone" onclick="document.getElementById('fileInput').click()" 
-                 class="w-full max-w-xs aspect-square border-4 border-dashed border-zinc-300 hover:border-violet-400 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition">
-                <i class="fa-solid fa-cloud-arrow-up text-7xl text-zinc-300 mb-6"></i>
-                <p class="font-medium text-lg">Нажмите или перетащите фото</p>
-                <p class="text-xs text-zinc-400 mt-1">JPG / PNG до 15 МБ</p>
-            </div>
-            <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="handlePhoto(event)">
-        </div>
-
-        <div id="photoPreview" class="hidden px-8 pb-8">
-            <img id="previewImg" class="w-full rounded-3xl shadow-2xl">
-            <button onclick="removePhoto()" class="mt-6 mx-auto flex items-center gap-2 text-red-500 text-sm font-medium">
-                <i class="fa-solid fa-trash"></i> Удалить фото
-            </button>
-        </div>
-
-        <div class="p-6">
-            <button onclick="startDemoGeneration()" id="generateBtn" disabled
-                    class="w-full py-5 btn-primary text-white rounded-3xl font-semibold text-xl">Сгенерировать демо-дизайн</button>
-        </div>
-    </div>
-
-    <!-- LOADING -->
-    <div id="loadingScreen" class="hidden fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center">
-        <div class="w-20 h-20 border-8 border-zinc-100 border-t-violet-600 rounded-full animate-spin"></div>
-        <p class="mt-8 text-2xl font-semibold tracking-tight">Grok Imagine думает...</p>
-        <p class="text-zinc-500 mt-2">Анализирует фото и ваши ответы</p>
-    </div>
-
-    <!-- RESULT -->
-    <div id="resultScreen" class="hidden fixed inset-0 bg-white z-[110] overflow-auto pb-24">
-        <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center">
-            <button onclick="backToMain()" class="text-3xl mr-4">←</button>
-            <span class="font-semibold text-xl">Ваш новый интерьер (ДЕМО)</span>
-        </div>
-        <div class="px-6 pt-6">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="uppercase text-xs tracking-widest text-zinc-400 mb-2">БЫЛО</p>
-                    <img id="beforeImg" class="w-full rounded-3xl shadow-2xl">
-                </div>
-                <div>
-                    <p class="uppercase text-xs tracking-widest text-emerald-500 mb-2">СТАЛО ✨</p>
-                    <img id="afterImg" class="w-full rounded-3xl shadow-2xl">
-                </div>
-            </div>
-
-            <div class="mt-10 bg-zinc-50 rounded-3xl p-6 text-sm">
-                <p class="font-medium mb-4">Ваши настройки:</p>
-                <div id="summary" class="space-y-3"></div>
-            </div>
-        </div>
-
-        <div class="fixed bottom-0 left-0 right-0 max-w-[428px] mx-auto bg-white border-t p-6 flex gap-3">
-            <button onclick="backToMain()" class="flex-1 py-4 border border-zinc-300 rounded-3xl font-medium">Ещё раз</button>
-            <button onclick="backToMain()" class="flex-1 btn-primary text-white py-4 rounded-3xl font-semibold">Новый дизайн</button>
-        </div>
+        <!-- РЕАЛЬНЫЙ РЕДАКТОР ИЗ GITHUB -->
+        <iframe id="blueprintFrame" src="https://furnishup.github.io/blueprint3d/example/" 
+                class="flex-1"></iframe>
     </div>
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-6 py-3.5 rounded-3xl text-sm shadow-2xl"></div>
-
 <script>
-    let currentStep = 0;
-    let answers = {};
-    let userPhotoURL = "";
-
-    // Вопросы с РЕАЛЬНЫМИ ФОТО вместо смайликов
-    const questions = [
-        {
-            q: "Какой стиль интерьера вы хотите?",
-            opts: [
-                {text: "Минимализм", img: "https://picsum.photos/id/1015/400/250"},
-                {text: "Скандинавский", img: "https://picsum.photos/id/133/400/250"},
-                {text: "Современный", img: "https://picsum.photos/id/201/400/250"},
-                {text: "Классика", img: "https://picsum.photos/id/251/400/250"},
-                {text: "Лофт", img: "https://picsum.photos/id/180/400/250"},
-                {text: "Бохо", img: "https://picsum.photos/id/870/400/250"}
-            ]
-        },
-        {
-            q: "Какое помещение обновляем?",
-            opts: [
-                {text: "Гостиная", img: "https://picsum.photos/id/160/400/250"},
-                {text: "Спальня", img: "https://picsum.photos/id/292/400/250"},
-                {text: "Кухня", img: "https://picsum.photos/id/106/400/250"},
-                {text: "Ванная", img: "https://picsum.photos/id/133/400/250"},
-                {text: "Кабинет", img: "https://picsum.photos/id/201/400/250"}
-            ]
-        },
-        {
-            q: "Основная цветовая гамма",
-            opts: [
-                {text: "Нейтральная", img: "https://picsum.photos/id/1016/400/250"},
-                {text: "Тёплая", img: "https://picsum.photos/id/251/400/250"},
-                {text: "Холодная", img: "https://picsum.photos/id/180/400/250"},
-                {text: "Яркая", img: "https://picsum.photos/id/870/400/250"}
-            ]
-        },
-        {
-            q: "Какое настроение должно быть?",
-            opts: [
-                {text: "Уютное", img: "https://picsum.photos/id/133/400/250"},
-                {text: "Спокойное", img: "https://picsum.photos/id/1015/400/250"},
-                {text: "Энергичное", img: "https://picsum.photos/id/292/400/250"},
-                {text: "Роскошное", img: "https://picsum.photos/id/201/400/250"}
-            ]
-        },
-        {
-            q: "Дополнительные пожелания",
-            opts: [
-                {text: "Много зелени", img: "https://picsum.photos/id/870/400/250"},
-                {text: "Умный свет", img: "https://picsum.photos/id/160/400/250"},
-                {text: "Много искусства", img: "https://picsum.photos/id/251/400/250"},
-                {text: "Эко-материалы", img: "https://picsum.photos/id/106/400/250"}
-            ]
-        },
-        {
-            q: "Примерный бюджет обновления",
-            opts: [
-                {text: "До 200 000 ₽", img: "https://picsum.photos/id/1015/400/250"},
-                {text: "200–500 000 ₽", img: "https://picsum.photos/id/133/400/250"},
-                {text: "Более 500 000 ₽", img: "https://picsum.photos/id/201/400/250"}
-            ]
-        }
-    ];
-
-    const demoAfterImages = [
-        "https://picsum.photos/id/1015/1024/1024",
-        "https://picsum.photos/id/133/1024/1024",
-        "https://picsum.photos/id/201/1024/1024",
-        "https://picsum.photos/id/251/1024/1024",
-        "https://picsum.photos/id/180/1024/1024",
-        "https://picsum.photos/id/870/1024/1024"
-    ];
-
-    function showToast(text) {
-        const t = document.getElementById('toast');
-        t.textContent = text;
-        t.classList.remove('hidden');
-        setTimeout(() => t.classList.add('hidden'), 2800);
-    }
-
-    function startGenerationFlow() {
+    function openEditor() {
         document.getElementById('mainScreen').classList.add('hidden');
-        document.getElementById('quizScreen').classList.remove('hidden');
-        currentStep = 0;
-        answers = {};
-        renderQuestion();
-    }
-
-    function renderQuestion() {
-        const q = questions[currentStep];
-        let html = `<div class="text-center mb-8"><p class="text-3xl font-semibold leading-tight">${q.q}</p></div>`;
-        html += `<div class="grid grid-cols-2 gap-4">`;
-
-        q.opts.forEach((opt, i) => {
-            html += `
-                <div onclick="selectOption(${i})" class="option-card bg-white border-2 border-transparent rounded-3xl overflow-hidden cursor-pointer shadow-sm">
-                    <img src="${opt.img}" class="w-full h-32 object-cover">
-                    <div class="p-4 text-center font-medium text-base">${opt.text}</div>
-                </div>`;
-        });
-
-        html += `</div>`;
-        document.getElementById('questionArea').innerHTML = html;
-
-        document.getElementById('progressBar').style.width = `${((currentStep + 1) / 6) * 100}%`;
-        document.getElementById('stepText').textContent = `${currentStep + 1}/6`;
-        document.getElementById('nextBtn').classList.add('hidden');
-    }
-
-    function selectOption(idx) {
-        answers[currentStep] = questions[currentStep].opts[idx].text;
-        document.getElementById('nextBtn').classList.remove('hidden');
-    }
-
-    function nextQuestion() {
-        if (currentStep < 5) {
-            currentStep++;
-            renderQuestion();
-        } else {
-            document.getElementById('quizScreen').classList.add('hidden');
-            document.getElementById('uploadScreen').classList.remove('hidden');
-        }
-    }
-
-    function handlePhoto(e) {
-        const reader = new FileReader();
-        reader.onload = ev => {
-            userPhotoURL = ev.target.result;
-            document.getElementById('dropZone').classList.add('hidden');
-            document.getElementById('photoPreview').classList.remove('hidden');
-            document.getElementById('previewImg').src = userPhotoURL;
-            document.getElementById('generateBtn').disabled = false;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-
-    function removePhoto() {
-        userPhotoURL = "";
-        document.getElementById('dropZone').classList.remove('hidden');
-        document.getElementById('photoPreview').classList.add('hidden');
-        document.getElementById('generateBtn').disabled = true;
-    }
-
-    function startDemoGeneration() {
-        document.getElementById('uploadScreen').classList.add('hidden');
-        document.getElementById('loadingScreen').classList.remove('hidden');
-
-        setTimeout(() => {
-            document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('resultScreen').classList.remove('hidden');
-
-            document.getElementById('beforeImg').src = userPhotoURL || "https://picsum.photos/id/1015/800/600";
-            document.getElementById('afterImg').src = demoAfterImages[Math.floor(Math.random() * demoAfterImages.length)];
-
-            let summaryHTML = '';
-            Object.keys(answers).forEach(k => {
-                summaryHTML += `<div class="flex justify-between py-1 border-b last:border-none">
-                    <span class="text-zinc-500">${questions[k].q}</span>
-                    <span class="font-medium">${answers[k]}</span>
-                </div>`;
-            });
-            document.getElementById('summary').innerHTML = summaryHTML;
-
-            showToast('✅ Демо-дизайн готов!');
-        }, 2200);
-    }
-
-    function closeQuiz() {
-        document.getElementById('quizScreen').classList.add('hidden');
-        document.getElementById('mainScreen').classList.remove('hidden');
-    }
-
-    function closeUpload() {
-        document.getElementById('uploadScreen').classList.add('hidden');
-        document.getElementById('mainScreen').classList.remove('hidden');
+        document.getElementById('editorScreen').classList.remove('hidden');
     }
 
     function backToMain() {
-        document.getElementById('resultScreen').classList.add('hidden');
+        document.getElementById('editorScreen').classList.add('hidden');
         document.getElementById('mainScreen').classList.remove('hidden');
     }
 
     function closeApp() {
-        showToast('Приложение закрыто');
+        if (confirm('Закрыть приложение?')) {
+            window.close();
+        }
     }
 
+    // Приветствие
     window.onload = () => {
-        showToast('👋 Добро пожаловать в InterioAI ДЕМО!');
-        console.log('%cInterioAI ДЕМО с фото в вопросах готов ❤️', 'color:#7c3aed; font-size:15px');
+        console.log('%cHomeCraft 3D готов! 🔥\nОткрывай редактор и тыкай сколько хочешь — это реальный GitHub-проект Blueprint3D.', 
+                    'color:#14b8a6; font-size:15px; font-weight:bold');
     };
 </script>
 </body>
