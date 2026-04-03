@@ -1,89 +1,560 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HomeCraft 3D — Реальный редактор</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', system-ui, sans-serif; }
-        .app-container { max-width: 428px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Сервис для Адвокатов · Уфа</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --bg:#0a0a0f; --bg2:#111118; --bg3:#16161f;
+  --card:#1a1a25; --card2:#1e1e2a;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --text:#f0f0f5; --text2:#8888a0; --text3:#555568;
+  --accent:#6c63ff; --accent2:#a78bfa; --accent3:#34d399; --accent4:#fbbf24;
+  --red:#f87171; --blue:#60a5fa;
+  --r:14px; --rs:10px;
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;position:relative;}
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;}
+.orb1{width:500px;height:500px;background:#6c63ff;top:-200px;left:-100px;animation:o1 20s ease-in-out infinite alternate;}
+.orb2{width:400px;height:400px;background:#a78bfa;top:20%;right:-100px;animation:o2 25s ease-in-out infinite alternate;}
+.orb3{width:350px;height:350px;background:#34d399;bottom:-100px;left:30%;animation:o3 18s ease-in-out infinite alternate;}
+@keyframes o1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.1)}}
+@keyframes o2{0%{transform:translate(0,0)}100%{transform:translate(-40px,60px) scale(.9)}}
+@keyframes o3{0%{transform:translate(0,0)}100%{transform:translate(30px,-40px) scale(1.05)}}
+.app-header{position:relative;z-index:10;padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,15,.8);backdrop-filter:blur(20px);flex-shrink:0;}
+.logo-row{display:flex;align-items:center;gap:10px;}
+.logo-ic{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:17px;}
+.logo-t{line-height:1.2;} .logo-t b{font-size:14px;font-weight:700;letter-spacing:-.3px;display:block;} .logo-t span{font-size:10px;color:var(--text2);}
+.hdr-r{display:flex;align-items:center;gap:8px;}
+.live-b{display:flex;align-items:center;gap:5px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--accent3);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:lp 1.5s infinite;}
+@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(52,211,153,.4)}50%{opacity:.6;box-shadow:0 0 0 4px rgba(52,211,153,0)}}
+.hdr-btn{width:34px;height:34px;border-radius:9px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;font-weight:300;color:var(--text2);}
+.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;z-index:1;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
+.scroll-area::-webkit-scrollbar{display:none;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;align-items:stretch;height:68px;padding-bottom:env(safe-area-inset-bottom,0);}
+.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:8px 2px;border:none;background:none;}
+.nav-it .ni{font-size:20px;transition:transform .2s;line-height:1;}
+.nav-it .nl{font-size:10px;font-weight:500;color:var(--text3);transition:color .2s;}
+.nav-it.active .nl{color:var(--accent2);}
+.nav-it.active .ni{transform:scale(1.1);}
+.page{display:none;}
+.page.active{display:block;animation:pi .22s ease;}
+@keyframes pi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.sec{padding:18px 16px;}
+.hero-strip{padding:20px 16px 16px;background:linear-gradient(135deg,rgba(108,99,255,.15),rgba(167,139,250,.07));border-bottom:1px solid var(--border);}
+.hero-strip h1{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;line-height:1.25;}
+.hero-strip h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-strip p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
+.stats-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;}
+.stats-scroll::-webkit-scrollbar{display:none;}
+.stat-pill{flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;text-align:center;min-width:92px;}
+.sn{font-size:20px;font-weight:700;line-height:1;margin-bottom:3px;}
+.sn.v{color:var(--accent2);}.sn.g{color:var(--accent3);}.sn.y{color:var(--accent4);}
+.sl{font-size:10px;color:var(--text2);line-height:1.3;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sec-hdr h2{font-size:16px;font-weight:700;letter-spacing:-.3px;}
+.sec-hdr a{font-size:12px;color:var(--accent2);cursor:pointer;}
+.ftabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
+.ftabs::-webkit-scrollbar{display:none;}
+.ftab{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap;}
+.ftab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;cursor:pointer;}
+.card:active{border-color:var(--border2);}
+.cb{padding:14px;}
+.crow{display:flex;align-items:flex-start;gap:12px;}
+.cic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ci{flex:1;min-width:0;}
+.ct{font-size:14px;font-weight:600;margin-bottom:3px;line-height:1.3;}
+.cs{font-size:12px;color:var(--text2);line-height:1.5;}
+.cmeta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+.tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;}
+.tv{background:rgba(108,99,255,.15);color:var(--accent2);}
+.tg{background:rgba(52,211,153,.12);color:var(--accent3);}
+.ty{background:rgba(251,191,36,.12);color:var(--accent4);}
+.tr{background:rgba(248,113,113,.12);color:var(--red);}
+.chat-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.chat-hd{background:linear-gradient(135deg,rgba(108,99,255,.3),rgba(167,139,250,.18));border-bottom:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.c-av{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.c-hi{flex:1;} .c-hi b{font-size:13px;font-weight:700;display:block;} .c-hi span{font-size:10px;color:var(--accent2);}
+.c-on{width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 6px var(--accent3);}
+.chat-msgs{padding:12px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.chat-msgs::-webkit-scrollbar{display:none;}
+.msg{max-width:82%;}
+.mb{align-self:flex-start;}.mu{align-self:flex-end;}
+.bb{padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5;}
+.mb .bb{background:var(--card2);border-bottom-left-radius:4px;}
+.mu .bb{background:var(--accent);border-bottom-right-radius:4px;}
+.mt{font-size:10px;color:var(--text3);margin-top:3px;padding:0 3px;}
+.mb .mt{text-align:left;}.mu .mt{text-align:right;}
+.copts{padding:0 12px 10px;display:flex;flex-direction:column;gap:6px;}
+.copt{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:10px;padding:9px 12px;font-size:12.5px;color:var(--accent2);cursor:pointer;text-align:left;transition:all .18s;font-family:inherit;font-weight:500;}
+.copt:active{background:rgba(108,99,255,.2);}
+.chat-inp-row{border-top:1px solid var(--border);padding:10px 12px;display:flex;gap:8px;}
+.c-inp{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:13px;color:var(--text);outline:none;font-family:inherit;}
+.c-inp:focus{border-color:var(--accent);}
+.c-send{width:34px;height:34px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.c-send:active{transform:scale(.92);}
+.upload-z{border:2px dashed rgba(108,99,255,.3);background:rgba(108,99,255,.05);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px;}
+.upload-z:active{border-color:var(--accent);background:rgba(108,99,255,.1);}
+.upload-z h3{font-size:14px;font-weight:600;margin-bottom:5px;}
+.upload-z p{font-size:12px;color:var(--text2);}
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:none;}
+.res-card.show{display:block;animation:pi .3s ease;}
+.res-hd{padding:14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;}
+.res-hd h3{font-size:14px;font-weight:700;margin-bottom:2px;}
+.res-hd span{font-size:11px;color:var(--text2);}
+.res-b{padding:14px;}
+.donut-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.donut-w{position:relative;width:88px;height:88px;flex-shrink:0;}
+.donut-w svg{transform:rotate(-90deg);}
+.donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.dp{font-size:20px;font-weight:700;color:var(--accent2);line-height:1;}
+.dl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.d-info h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+.d-info p{font-size:12px;color:var(--text2);line-height:1.55;}
+.vp{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;}
+.vpg{background:rgba(52,211,153,.1);color:var(--accent3);border:1px solid rgba(52,211,153,.2);}
+.risk-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.r-hdr{display:flex;justify-content:space-between;margin-bottom:4px;}
+.r-nm{font-size:12px;color:var(--text2);}
+.r-pct{font-size:12px;font-weight:600;}
+.r-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.rf{height:100%;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1);}
+.rf-r{background:var(--red);}.rf-y{background:var(--accent4);}.rf-g{background:var(--accent3);}
+.res-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.res-tag{font-size:11px;padding:4px 9px;border-radius:6px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);}
+.btn-row{display:flex;gap:10px;}
+.btn-row .bp,.btn-row .bs{flex:1;text-align:center;}
+.calc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+.calc-t{font-size:14px;font-weight:700;margin-bottom:3px;}
+.calc-d{font-size:12px;color:var(--text2);margin-bottom:14px;}
+.cf{margin-bottom:12px;}
+.cf label{display:block;font-size:11px;color:var(--text2);font-weight:500;margin-bottom:5px;}
+.ci2{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);outline:none;font-family:inherit;}
+.ci2:focus{border-color:var(--accent);}
+.cs2{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);outline:none;font-family:inherit;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.sl-row{display:flex;align-items:center;gap:10px;}
+.sl-val{font-size:13px;font-weight:600;color:var(--accent2);min-width:80px;text-align:right;}
+input[type=range]{flex:1;height:4px;border-radius:2px;outline:none;-webkit-appearance:none;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,50%),rgba(255,255,255,.1) var(--pct,50%),rgba(255,255,255,.1) 100%);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer;}
+.cr-box{background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(167,139,250,.06));border:1px solid rgba(108,99,255,.2);border-radius:var(--rs);padding:14px;text-align:center;margin-top:14px;}
+.cr-lbl{font-size:11px;color:var(--text2);margin-bottom:3px;}
+.cr-val{font-size:26px;font-weight:700;color:var(--accent2);line-height:1;}
+.cr-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.mbox{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.mbox .ml{font-size:11px;color:var(--text2);margin-bottom:6px;}
+.mbox .mv{font-size:24px;font-weight:700;line-height:1;margin-bottom:4px;}
+.mbox .mc{font-size:11px;}
+.up{color:var(--accent3);}.dn{color:var(--red);}
+.mbars{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:8px;}
+.mbar{flex:1;border-radius:3px 3px 0 0;background:rgba(108,99,255,.2);min-height:3px;transition:height .5s;}
+.mbar.hi{background:var(--accent);}
+.fn-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.fn-box h3{font-size:13px;font-weight:700;margin-bottom:14px;}
+.fn-s{margin-bottom:10px;}
+.fn-h{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
+.fn-h span:first-child{color:var(--text2);} .fn-h span:last-child{font-weight:600;}
+.fb{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.ff{height:100%;border-radius:4px;width:0;transition:width 1s cubic-bezier(.16,1,.3,1);}
+.lt-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
+.l-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;}
+.l-row:last-child{border-bottom:none;}
+.l-row:active{background:rgba(255,255,255,.03);}
+.lav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.li{flex:1;min-width:0;} .ln{font-size:13px;font-weight:600;} .lt{font-size:11px;color:var(--text2);}
+.sb{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;}
+.shot{background:rgba(248,113,113,.15);color:var(--red);}
+.swarm{background:rgba(251,191,36,.12);color:var(--accent4);}
+.spaid{background:rgba(52,211,153,.12);color:var(--accent3);}
+.scold{background:rgba(255,255,255,.06);color:var(--text3);}
+.q-list{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.q-it{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);}
+.q-it:last-child{border-bottom:none;}
+.qn{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.qt{flex:1;} .qt b{font-size:13px;font-weight:500;display:block;} .qt span{font-size:11px;color:var(--text2);}
+.qp{font-size:12px;font-weight:700;}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;}
+.cc:active{border-color:var(--border2);}
+.ctl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:7px;}
+.ctt{font-size:14px;font-weight:600;line-height:1.35;margin-bottom:6px;}
+.ctm{font-size:11px;color:var(--text3);margin-bottom:10px;}
+.cts{display:flex;gap:14px;padding-top:10px;border-top:1px solid var(--border);}
+.cst{font-size:11px;color:var(--text2);} .cst b{color:var(--text);}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:10px;position:relative;}
+.tc.feat{border-color:var(--accent);background:linear-gradient(135deg,rgba(108,99,255,.1),var(--card));}
+.fb2{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;}
+.tn{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;}
+.tp{font-size:32px;font-weight:700;letter-spacing:-1px;margin-bottom:2px;}
+.tp sub{font-size:14px;font-weight:400;color:var(--text2);}
+.tpr{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.tfs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.tf{display:flex;align-items:center;gap:8px;font-size:13px;}
+.ck{color:var(--accent3);font-size:13px;} .cx{color:var(--text3);font-size:13px;}
+.btn-t{width:100%;padding:12px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .2s;}
+.btn-t.p{background:var(--accent);color:#fff;} .btn-t.p:active{background:#5a52d5;}
+.btn-t.o{background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border);} .btn-t.o:active{background:rgba(255,255,255,.1);}
+.bp{background:var(--accent);color:#fff;border:none;border-radius:var(--rs);padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+.bp:active{background:#5a52d5;transform:scale(.98);}
+.bs{background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+.bs:active{background:rgba(255,255,255,.1);}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(12px);align-items:flex-end;}
+.modal-overlay.open{display:flex;animation:mf .2s ease;}
+@keyframes mf{from{opacity:0}to{opacity:1}}
+.msheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px 18px 40px;width:100%;border-top:1px solid var(--border2);animation:su .3s cubic-bezier(.34,1.56,.64,1);max-height:80vh;overflow-y:auto;}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhandle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 18px;}
+.msheet h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.msheet p{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(30px);background:rgba(30,30,40,.97);color:var(--text);padding:10px 18px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;border:1px solid var(--border2);backdrop-filter:blur(10px);display:flex;align-items:center;gap:7px;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
 </head>
-<body class="bg-zinc-950">
+<body>
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
 
-<div class="app-container mx-auto">
+<header class="app-header">
+  <div class="logo-row">
+    <div class="logo-ic">⚖️</div>
+    <div class="logo-t"><b>Сервис для Адвокатов</b><span>Уфа · Башкирия · 2026</span></div>
+  </div>
+  <div class="hdr-r">
+    <div class="live-b"><div class="live-dot"></div>LIVE</div>
+    <div class="hdr-btn" onclick="openModal('contact')">+</div>
+  </div>
+</header>
 
-    <!-- HEADER -->
-    <div class="bg-white border-b px-5 py-4 flex items-center justify-between sticky top-0 z-50">
-        <button onclick="closeApp()" class="text-teal-600 font-semibold text-lg">Закрыть</button>
-        <div class="flex items-center gap-2">
-            <span class="text-3xl">🏠</span>
-            <div>
-                <span class="font-bold text-2xl tracking-tighter text-teal-700">HomeCraft</span>
-                <p class="text-[10px] text-teal-500 -mt-1">3D редактор (GitHub)</p>
-            </div>
-        </div>
-        <div class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-2xl text-xs font-medium">БЕСПЛАТНО</div>
+<div class="scroll-area" id="sa">
+
+<!-- ═══ ОБЗОР ═══ -->
+<div id="page-home" class="page active">
+  <div class="hero-strip">
+    <h1>Умный сервис для<br><em>юридического бизнеса</em></h1>
+    <p>Автоматизация консультаций, квалификация клиентов и аналитика. Работает 24/7.</p>
+    <div class="stats-scroll">
+      <div class="stat-pill"><div class="sn v">−70%</div><div class="sl">Холостых<br>обращений</div></div>
+      <div class="stat-pill"><div class="sn g">3×</div><div class="sl">Рост<br>конверсии</div></div>
+      <div class="stat-pill"><div class="sn y">24/7</div><div class="sl">Режим<br>работы</div></div>
+      <div class="stat-pill"><div class="sn v">248</div><div class="sl">Лидов<br>в июле</div></div>
     </div>
-
-    <!-- LANDING -->
-    <div id="mainScreen" class="p-6">
-        <div class="text-center mt-8">
-            <h1 class="text-4xl font-bold tracking-tighter text-teal-900">Собери свой дом в 3D</h1>
-            <p class="mt-3 text-zinc-600">Перетаскивай мебель, рисуй стены, смотри в 3D</p>
-        </div>
-
-        <button onclick="openEditor()" 
-                class="mt-12 w-full py-7 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-2xl font-semibold rounded-3xl shadow-2xl flex items-center justify-center gap-4">
-            <i class="fa-solid fa-cube text-3xl"></i>
-            Открыть 3D редактор
-        </button>
-
-        <div class="mt-16 text-center">
-            <p class="text-sm text-zinc-500">На основе открытого проекта <span class="font-medium">Blueprint3D (GitHub)</span></p>
-        </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr"><h2>Возможности</h2></div>
+    <div class="ftabs">
+      <button class="ftab active" onclick="ff('all',this)">Все</button>
+      <button class="ftab" onclick="ff('consult',this)">Консультация</button>
+      <button class="ftab" onclick="ff('analytics',this)">Аналитика</button>
+      <button class="ftab" onclick="ff('content',this)">Контент</button>
     </div>
-
-    <!-- 3D EDITOR SCREEN -->
-    <div id="editorScreen" class="hidden fixed inset-0 bg-zinc-900 flex flex-col z-50">
-        <div class="bg-white px-5 py-4 flex items-center border-b">
-            <button onclick="backToMain()" class="text-3xl text-teal-600">←</button>
-            <div class="flex-1 text-center font-semibold text-teal-700">3D Планировщик интерьера</div>
-            <button onclick="backToMain()" class="text-red-500 text-sm font-medium">Закрыть</button>
-        </div>
-        
-        <!-- РЕАЛЬНЫЙ РЕДАКТОР ИЗ GITHUB -->
-        <iframe id="blueprintFrame" src="https://furnishup.github.io/blueprint3d/example/" 
-                class="flex-1"></iframe>
+    <div id="feat-list">
+      <div class="card feat-it" data-c="consult" onclick="sp('bot')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(108,99,255,.15)">🤖</div><div class="ci"><div class="ct">ИИ-консультант и продажник</div><div class="cs">Выявляет боль, усиливает срочность, закрывает клиента на оплату. Это не бот — менеджер по продажам.</div></div></div><div class="cmeta"><span class="tag tv">Демо →</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="consult" onclick="sp('analysis')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(167,139,250,.15)">📋</div><div class="ci"><div class="ct">ИИ-анализ дела</div><div class="cs">Загрузите документы — система найдёт риски и даст прогноз вероятности выигрыша.</div></div></div><div class="cmeta"><span class="tag tv">Загрузить →</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="analytics" onclick="sp('calc')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">🧮</div><div class="ci"><div class="ct">Юридические калькуляторы</div><div class="cs">Алименты, ДТП, стоимость дела, срок давности — клиент видит цифры сразу.</div></div></div><div class="cmeta"><span class="tag tg">Попробовать →</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="analytics" onclick="sp('crm')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(251,191,36,.12)">📊</div><div class="ci"><div class="ct">CRM и аналитика</div><div class="cs">Лиды, оплаты, воронка, топ вопросов — полная картина в реальном времени.</div></div></div><div class="cmeta"><span class="tag ty">Дашборд →</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="consult" onclick="openModal('docgen')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(248,113,113,.12)">📄</div><div class="ci"><div class="ct">Автогенерация документов</div><div class="cs">Иски, жалобы, договоры — бесплатный шаблон или платный кастомный документ.</div></div></div><div class="cmeta"><span class="tag tr">SaaS-модуль</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="content" onclick="sp('content')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(96,165,250,.12)">✍️</div><div class="ci"><div class="ct">Контент-фабрика</div><div class="cs">Анализирует вопросы клиентов и создаёт статьи, посты, Reels автоматически.</div></div></div><div class="cmeta"><span class="tag tv">Смотреть →</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
+      <div class="card feat-it" data-c="analytics" onclick="openModal('predictor')">
+        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">🔮</div><div class="ci"><div class="ct">Предсказание исхода дела</div><div class="cs">Сравнивает кейс с 50 000+ судебных решений и даёт вероятность выигрыша.</div></div></div><div class="cmeta"><span class="tag tg">Скоро</span><span style="color:var(--text3)">›</span></div></div>
+      </div>
     </div>
+  </div>
 </div>
 
+<!-- ═══ БОТ ═══ -->
+<div id="page-bot" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">ИИ-консультант</div><h2>Демо бота</h2></div></div>
+    <div class="chat-wrap">
+      <div class="chat-hd"><div class="c-av">⚖️</div><div class="c-hi"><b>Сервис для Адвокатов</b><span>Юридический ассистент</span></div><div class="c-on"></div></div>
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="msg mb"><div class="bb">Здравствуйте! Опишите ситуацию — помогу разобраться 👋</div><div class="mt">сейчас</div></div>
+      </div>
+      <div class="copts" id="copts">
+        <button class="copt" onclick="rs('divorce')">💔 Развод и раздел имущества</button>
+        <button class="copt" onclick="rs('dtp')">🚗 Попал в ДТП</button>
+        <button class="copt" onclick="rs('debt')">💸 Проблемы с долгами</button>
+        <button class="copt" onclick="rs('worker')">👔 Трудовой спор</button>
+      </div>
+      <div class="chat-inp-row">
+        <input class="c-inp" id="ci" type="text" placeholder="Напишите вашу ситуацию...">
+        <button class="c-send" onclick="sendM()">→</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="cb">
+        <div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Как работает</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(108,99,255,.2);color:var(--accent2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Выявляет боль</div><div style="font-size:12px;color:var(--text2)">Направленные вопросы, определение типа проблемы</div></div></div>
+          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Усиливает срочность</div><div style="font-size:12px;color:var(--text2)">Объясняет риски промедления и сроки давности</div></div></div>
+          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(52,211,153,.15);color:var(--accent3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Закрывает на оплату</div><div style="font-size:12px;color:var(--text2)">Консультация или передача тёплого лида юристу</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ АНАЛИЗ ═══ -->
+<div id="page-analysis" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">ИИ-анализ</div><h2>Анализ дела</h2></div></div>
+    <div class="upload-z" onclick="doUpload()">
+      <div style="font-size:40px;margin-bottom:10px">📂</div>
+      <h3>Загрузить документ</h3>
+      <p>PDF, DOC, DOCX, TXT — договоры, переписка, иски<br>Нажмите для выбора файла</p>
+    </div>
+    <div class="res-card" id="resCard">
+      <div class="res-hd"><span style="font-size:22px">📋</span><div><h3>Анализ завершён</h3><span>Договор купли-продажи.pdf · 15 рисков</span></div><span class="tag tg" style="margin-left:auto">✓ Готово</span></div>
+      <div class="res-b">
+        <div class="donut-row">
+          <div class="donut-w">
+            <svg width="88" height="88" viewBox="0 0 88 88"><circle cx="44" cy="44" r="36" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="9"/><circle cx="44" cy="44" r="36" fill="none" stroke="url(#dg)" stroke-width="9" stroke-dasharray="226" stroke-dashoffset="226" stroke-linecap="round" id="dring"/><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6c63ff"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs></svg>
+            <div class="donut-c"><div class="dp" id="dpct">0%</div><div class="dl">выигрыш</div></div>
+          </div>
+          <div class="d-info"><div class="vp vpg">✅ Дело перспективное</div><h4>Вероятность: 65%</h4><p>На основе 4 200 аналогичных дел. Срок подачи — 14 дней.</p></div>
+        </div>
+        <div class="risk-list">
+          <div><div class="r-hdr"><span class="r-nm">Нарушение сроков поставки</span><span class="r-pct" style="color:var(--red)">85%</span></div><div class="r-bar"><div class="rf rf-r" data-w="85"></div></div></div>
+          <div><div class="r-hdr"><span class="r-nm">Спорное право собственности</span><span class="r-pct" style="color:var(--accent4)">52%</span></div><div class="r-bar"><div class="rf rf-y" data-w="52"></div></div></div>
+          <div><div class="r-hdr"><span class="r-nm">Двусмысленность условий</span><span class="r-pct" style="color:var(--accent4)">38%</span></div><div class="r-bar"><div class="rf rf-y" data-w="38"></div></div></div>
+          <div><div class="r-hdr"><span class="r-nm">Неустойка соответствует норме</span><span class="r-pct" style="color:var(--accent3)">90%</span></div><div class="r-bar"><div class="rf rf-g" data-w="90"></div></div></div>
+        </div>
+        <div class="res-tags">
+          <span class="res-tag">📅 Срок: 14 дней</span><span class="res-tag">⚖️ Арбитраж</span><span class="res-tag">💰 850 000 ₽</span><span class="res-tag">🔍 3 доказательства</span>
+        </div>
+        <div class="btn-row">
+          <button class="bp" onclick="openModal('consult')">К юристу</button>
+          <button class="bs" onclick="openModal('docgen')">Сгенерировать иск</button>
+        </div>
+      </div>
+    </div>
+    <div id="qcards" style="display:none;margin-top:14px">
+      <div class="sec-hdr"><h2>Разбор вопросов</h2></div>
+      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(248,113,113,.12)">⚠️</div><div class="ci"><div class="ct">Нарушение сроков — высокий риск</div><div class="cs">Зафиксированные сроки поставки нарушены. Основание для взыскания неустойки по ст. 330 ГК РФ.</div></div></div><div class="cmeta"><span class="tag tr">Критично</span></div></div></div>
+      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(251,191,36,.12)">🔍</div><div class="ci"><div class="ct">Право собственности — спорный момент</div><div class="cs">Пункт 3.4 содержит неоднозначную формулировку о переходе права. Требует уточнения.</div></div></div><div class="cmeta"><span class="tag ty">Требует внимания</span></div></div></div>
+      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">✅</div><div class="ci"><div class="ct">Неустойка — сильная позиция</div><div class="cs">Размер 0.1% в день соответствует норме. Суды, как правило, не снижают такой размер.</div></div></div><div class="cmeta"><span class="tag tg">Ваш плюс</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ КАЛЬКУЛЯТОРЫ ═══ -->
+<div id="page-calc" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Инструменты</div><h2>Калькуляторы</h2></div></div>
+    <div class="calc-card">
+      <div class="calc-t">💰 Алименты</div><div class="calc-d">Расчёт суммы на основе дохода и детей</div>
+      <div class="cf"><label>Ежемесячный доход</label><div class="sl-row"><input type="range" id="sal" min="30000" max="500000" step="5000" value="100000" oninput="us(this,'salV',v=>v.toLocaleString('ru-RU')+' ₽');cAlim()"><span class="sl-val" id="salV">100 000 ₽</span></div></div>
+      <div class="cf"><label>Количество детей</label><select class="cs2" id="kids" onchange="cAlim()"><option value="0.25">1 ребёнок (25%)</option><option value="0.33">2 детей (33%)</option><option value="0.5">3+ детей (50%)</option></select></div>
+      <div class="cr-box"><div class="cr-lbl">Ежемесячные алименты</div><div class="cr-val" id="alR">25 000 ₽</div><div class="cr-sub">ст. 81 СК РФ · до вычета НДФЛ</div></div>
+    </div>
+    <div class="calc-card">
+      <div class="calc-t">🚗 Компенсация ДТП</div><div class="calc-d">Ущерб + моральный вред по ОСАГО</div>
+      <div class="cf"><label>Ущерб автомобилю</label><div class="sl-row"><input type="range" id="carD" min="0" max="1000000" step="10000" value="150000" oninput="us(this,'carDV',v=>v.toLocaleString('ru-RU')+' ₽');cDtp()"><span class="sl-val" id="carDV">150 000 ₽</span></div></div>
+      <div class="cf"><label>Медицинские расходы</label><div class="sl-row"><input type="range" id="medD" min="0" max="300000" step="5000" value="30000" oninput="us(this,'medDV',v=>v.toLocaleString('ru-RU')+' ₽');cDtp()"><span class="sl-val" id="medDV">30 000 ₽</span></div></div>
+      <div class="cf"><label>Вина другой стороны</label><select class="cs2" id="guilt" onchange="cDtp()"><option value="1">100% — полная вина</option><option value="0.75">75% — преимущественная</option><option value="0.5">50% — обоюдная</option></select></div>
+      <div class="cr-box"><div class="cr-lbl">Потенциальная компенсация</div><div class="cr-val" id="dtpR">210 000 ₽</div><div class="cr-sub">включая моральный вред 30 000 ₽</div></div>
+    </div>
+    <div class="calc-card">
+      <div class="calc-t">⚖️ Стоимость ведения дела</div><div class="calc-d">Ориентировочная стоимость юридических услуг</div>
+      <div class="cf"><label>Тип дела</label><select class="cs2" id="caseT" onchange="cCase()"><option value="family">Семейное (развод, алименты)</option><option value="civil">Гражданское (договоры, ущерб)</option><option value="criminal">Уголовное</option><option value="arbitration">Арбитражное</option></select></div>
+      <div class="cf"><label>Сумма иска</label><div class="sl-row"><input type="range" id="claimA" min="50000" max="5000000" step="50000" value="500000" oninput="us(this,'claimAV',v=>(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K')+' ₽');cCase()"><span class="sl-val" id="claimAV">500K ₽</span></div></div>
+      <div class="cr-box"><div class="cr-lbl">Стоимость ведения</div><div class="cr-val" id="caseR">50 000 ₽</div><div class="cr-sub" id="caseRs">включая досудебное урегулирование</div></div>
+    </div>
+    <div class="calc-card">
+      <div class="calc-t">📅 Срок исковой давности</div><div class="calc-d">Есть ли ещё время для подачи иска</div>
+      <div class="cf"><label>Дата нарушения</label><input class="ci2" type="date" id="vDate" onchange="cDead()"></div>
+      <div class="cf"><label>Тип нарушения</label><select class="cs2" id="vType" onchange="cDead()"><option value="3">Общий срок (3 года)</option><option value="1">Трудовые споры (1 год)</option><option value="1">Защита потребителей (1 год)</option><option value="10">Ничтожные сделки (10 лет)</option></select></div>
+      <div class="cr-box"><div class="cr-lbl">Статус срока</div><div class="cr-val" id="deadR" style="font-size:18px">Введите дату</div><div class="cr-sub" id="deadRs">Укажите дату нарушения</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CRM ═══ -->
+<div id="page-crm" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Аналитика</div><h2>Дашборд</h2></div><a onclick="showToast('🔄 Данные обновлены')">Обновить</a></div>
+    <div class="m-grid">
+      <div class="mbox"><div class="ml">Лидов / месяц</div><div class="mv" style="color:var(--accent2)">248</div><div class="mc up">↑ 32%</div><div class="mbars" id="mb1"></div></div>
+      <div class="mbox"><div class="ml">Оплат</div><div class="mv" style="color:var(--accent3)">67</div><div class="mc up">↑ 18%</div><div class="mbars" id="mb2"></div></div>
+      <div class="mbox"><div class="ml">Выручка</div><div class="mv" style="color:var(--accent2);font-size:18px">1.25M ₽</div><div class="mc up">↑ 24%</div><div class="mbars" id="mb3"></div></div>
+      <div class="mbox"><div class="ml">Конверсия</div><div class="mv" style="color:var(--accent4)">27%</div><div class="mc up">↑ 8 п.п.</div><div class="mbars" id="mb4"></div></div>
+    </div>
+    <div class="fn-box">
+      <h3>Воронка продаж</h3>
+      <div class="fn-s"><div class="fn-h"><span>Входящие обращения</span><span>248</span></div><div class="fb"><div class="ff" data-w="100" style="background:var(--accent)"></div></div></div>
+      <div class="fn-s"><div class="fn-h"><span>Квалифицированные лиды</span><span>142</span></div><div class="fb"><div class="ff" data-w="57" style="background:var(--accent2)"></div></div></div>
+      <div class="fn-s"><div class="fn-h"><span>Записались на консультацию</span><span>98</span></div><div class="fb"><div class="ff" data-w="39" style="background:var(--accent4)"></div></div></div>
+      <div class="fn-s" style="margin-bottom:0"><div class="fn-h"><span>Оплатили услуги</span><span>67</span></div><div class="fb"><div class="ff" data-w="27" style="background:var(--accent3)"></div></div></div>
+    </div>
+    <div class="sec-hdr"><h2>Топ вопросов</h2></div>
+    <div class="q-list" style="margin-bottom:12px">
+      <div class="q-it"><div class="qn" style="background:rgba(108,99,255,.2);color:var(--accent2)">1</div><div class="qt"><b>Развод и раздел имущества</b><span>68 запросов</span></div><div class="qp" style="color:var(--accent2)">27%</div></div>
+      <div class="q-it"><div class="qn" style="background:rgba(167,139,250,.2);color:var(--accent2)">2</div><div class="qt"><b>Трудовые споры, увольнение</b><span>52 запроса</span></div><div class="qp" style="color:var(--accent2)">21%</div></div>
+      <div class="q-it"><div class="qn" style="background:rgba(251,191,36,.15);color:var(--accent4)">3</div><div class="qt"><b>ДТП и страховые споры</b><span>41 запрос</span></div><div class="qp" style="color:var(--accent4)">17%</div></div>
+      <div class="q-it"><div class="qn" style="background:rgba(52,211,153,.12);color:var(--accent3)">4</div><div class="qt"><b>Долги и банкротство</b><span>38 запросов</span></div><div class="qp" style="color:var(--accent3)">15%</div></div>
+    </div>
+    <div class="sec-hdr"><h2>Последние лиды</h2></div>
+    <div class="lt-wrap">
+      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(248,113,113,.15);color:var(--red)">ИМ</div><div class="li"><div class="ln">Иванова М.С.</div><div class="lt">Развод, раздел квартиры</div></div><span class="sb shot">Горячий</span></div>
+      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(52,211,153,.12);color:var(--accent3)">ПА</div><div class="li"><div class="ln">Петров А.В.</div><div class="lt">ДТП, страховая отказала</div></div><span class="sb spaid">Оплачено</span></div>
+      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(251,191,36,.12);color:var(--accent4)">СТ</div><div class="li"><div class="ln">Сидорова Т.И.</div><div class="lt">Незаконное увольнение</div></div><span class="sb swarm">Тёплый</span></div>
+      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(52,211,153,.12);color:var(--accent3)">КД</div><div class="li"><div class="ln">Козлов Д.Р.</div><div class="lt">Долг по договору займа</div></div><span class="sb spaid">Оплачено</span></div>
+      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(248,113,113,.15);color:var(--red)">НС</div><div class="li"><div class="ln">Николаев С.П.</div><div class="lt">Уголовное дело</div></div><span class="sb shot">Горячий</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ КОНТЕНТ ═══ -->
+<div id="page-content" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Контент-фабрика</div><h2>Автоконтент</h2></div></div>
+    <div class="ftabs">
+      <button class="ftab active" onclick="fc('all',this)">Все</button>
+      <button class="ftab" onclick="fc('article',this)">Статьи</button>
+      <button class="ftab" onclick="fc('post',this)">Посты</button>
+      <button class="ftab" onclick="fc('video',this)">Видео</button>
+    </div>
+    <div id="clist">
+      <div class="cc ct-it" data-t="article" onclick="openModal('content1')"><div class="ctl">📝 SEO-статья</div><div class="ctt">Как разделить имущество при разводе: пошаговая инструкция</div><div class="ctm">На основе 68 запросов · 7 200 символов</div><div class="cts"><div class="cst"><b>4 200</b> просмотров</div><div class="cst"><b>12</b> лидов</div><div class="cst"><b>3</b> оплаты</div></div></div>
+      <div class="cc ct-it" data-t="post" onclick="openModal('content1')"><div class="ctl">📱 Telegram-пост</div><div class="ctt">5 ошибок при ДТП, которые лишат вас компенсации</div><div class="ctm">На основе 41 запроса · 1 200 символов</div><div class="cts"><div class="cst"><b>8 100</b> просмотров</div><div class="cst"><b>24</b> лида</div><div class="cst"><b>7</b> оплат</div></div></div>
+      <div class="cc ct-it" data-t="video" onclick="openModal('content1')"><div class="ctl">🎬 YouTube Shorts</div><div class="ctt">Уволили незаконно? Что делать в первые 24 часа</div><div class="ctm">На основе 52 запросов · 60 сек</div><div class="cts"><div class="cst"><b>22 000</b> просмотров</div><div class="cst"><b>38</b> лидов</div><div class="cst"><b>9</b> оплат</div></div></div>
+      <div class="cc ct-it" data-t="article" onclick="openModal('content1')"><div class="ctl">📝 SEO-статья</div><div class="ctt">Банкротство физических лиц 2025: что изменилось</div><div class="ctm">На основе 38 запросов · 6 400 символов</div><div class="cts"><div class="cst"><b>3 100</b> просмотров</div><div class="cst"><b>8</b> лидов</div><div class="cst"><b>2</b> оплаты</div></div></div>
+      <div class="cc ct-it" data-t="post" onclick="openModal('content1')"><div class="ctl">📱 Reels / TikTok</div><div class="ctt">Срок исковой давности простыми словами за 30 сек</div><div class="ctm">На основе 29 запросов · 30 сек</div><div class="cts"><div class="cst"><b>15 600</b> просмотров</div><div class="cst"><b>19</b> лидов</div><div class="cst"><b>4</b> оплаты</div></div></div>
+    </div>
+    <div style="margin-top:12px"><button class="bp" style="width:100%" onclick="openModal('contentgen')">✨ Сгенерировать контент</button></div>
+  </div>
+</div>
+
+<!-- ═══ ТАРИФЫ ═══ -->
+<div id="page-tariffs" class="page">
+  <div class="sec">
+    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Цены</div><h2>Тарифы</h2></div></div>
+    <div class="tc"><div class="tn">Старт</div><div class="tp">30 000 <sub>₽/мес</sub></div><div class="tpr">для небольших практик</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Бот для Telegram</div><div class="tf"><span class="ck">✓</span> До 200 обращений/мес</div><div class="tf"><span class="ck">✓</span> Базовые калькуляторы</div><div class="tf"><span class="ck">✓</span> Передача лидов менеджеру</div><div class="tf"><span class="cx">✗</span> <span style="color:var(--text3)">Анализ документов</span></div><div class="tf"><span class="cx">✗</span> <span style="color:var(--text3)">CRM-аналитика</span></div></div><button class="btn-t o" onclick="openModal('contact')">Подключить</button></div>
+    <div class="tc feat"><div class="fb2">⭐ Популярный</div><div class="tn">Профи</div><div class="tp">80 000 <sub>₽/мес</sub></div><div class="tpr">для юридических компаний</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Всё из «Старт»</div><div class="tf"><span class="ck">✓</span> До 1 000 обращений/мес</div><div class="tf"><span class="ck">✓</span> Анализ документов</div><div class="tf"><span class="ck">✓</span> CRM-дашборд</div><div class="tf"><span class="ck">✓</span> Генерация документов</div><div class="tf"><span class="ck">✓</span> Прогноз выигрыша</div></div><button class="btn-t p" onclick="openModal('contact')">Подключить</button></div>
+    <div class="tc"><div class="tn">Бизнес</div><div class="tp">150 000 <sub>₽/мес</sub></div><div class="tpr">без ограничений</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Всё из «Профи»</div><div class="tf"><span class="ck">✓</span> Безлимит обращений</div><div class="tf"><span class="ck">✓</span> Контент-фабрика</div><div class="tf"><span class="ck">✓</span> Парсер судебных дел</div><div class="tf"><span class="ck">✓</span> Личный кабинет клиента</div><div class="tf"><span class="ck">✓</span> API-интеграция</div></div><button class="btn-t o" onclick="openModal('contact')">Подключить</button></div>
+    <div class="tc" style="background:linear-gradient(135deg,rgba(30,30,40,.9),rgba(22,22,30,.9));border-color:rgba(255,255,255,.1)"><div class="tn" style="color:rgba(255,255,255,.4)">White Label</div><div class="tp">от 200 000 <sub>₽</sub></div><div class="tpr" style="color:rgba(255,255,255,.4)">за запуск + поддержка</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Ваш бренд и домен</div><div class="tf"><span class="ck">✓</span> Вся экосистема</div><div class="tf"><span class="ck">✓</span> Обучение под вашу практику</div><div class="tf"><span class="ck">✓</span> Исходный код опционально</div></div><button class="btn-t o" onclick="openModal('contact')">Обсудить</button></div>
+  </div>
+</div>
+
+</div><!-- /scroll-area -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-it active" onclick="sp('home',this)"><span class="ni">🏠</span><span class="nl">Обзор</span></button>
+  <button class="nav-it" onclick="sp('bot',this)"><span class="ni">🤖</span><span class="nl">Бот</span></button>
+  <button class="nav-it" onclick="sp('analysis',this)"><span class="ni">📋</span><span class="nl">Анализ</span></button>
+  <button class="nav-it" onclick="sp('calc',this)"><span class="ni">🧮</span><span class="nl">Расчёты</span></button>
+  <button class="nav-it" onclick="sp('crm',this)"><span class="ni">📊</span><span class="nl">CRM</span></button>
+  <button class="nav-it" onclick="sp('content',this)"><span class="ni">✍️</span><span class="nl">Контент</span></button>
+  <button class="nav-it" onclick="sp('tariffs',this)"><span class="ni">💎</span><span class="nl">Тарифы</span></button>
+</nav>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-contact">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">👋</div><h3>Подключить сервис</h3><p>Специалист свяжется в течение 2 часов</p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><input class="ci2" type="text" placeholder="Ваше имя"><input class="ci2" type="tel" placeholder="Телефон или Telegram"><select class="cs2"><option>Выберите тариф...</option><option>Старт — 30 000 ₽/мес</option><option>Профи — 80 000 ₽/мес</option><option>Бизнес — 150 000 ₽/мес</option><option>White Label</option></select></div>
+  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('contact')">Отправить заявку</button><button class="bs" style="width:100%" onclick="closeModal('contact')">Закрыть</button></div>
+</div>
+<div class="modal-overlay" id="modal-consult">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">⚖️</div><h3>Записаться на консультацию</h3><p>Подберём специалиста по вашему делу на основе анализа</p>
+  <div style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:var(--rs);padding:12px;margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--accent3);margin-bottom:3px">✓ Дело проанализировано</div><div style="font-size:12px;color:var(--text2)">Вероятность выигрыша 65% · Срок подачи 14 дней</div></div>
+  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('consult')">Выбрать время</button><button class="bs" style="width:100%" onclick="closeModal('consult')">Позже</button></div>
+</div>
+<div class="modal-overlay" id="modal-docgen">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">📄</div><h3>Автогенерация документа</h3><p>Создадим на основе данных анализа</p>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"><button class="copt" onclick="sub('docgen')">📋 Исковое заявление · 2 900 ₽</button><button class="copt" onclick="sub('docgen')">📝 Претензия · бесплатно</button><button class="copt" onclick="sub('docgen')">📜 Жалоба в прокуратуру · 1 900 ₽</button><button class="copt" onclick="sub('docgen')">🤝 Договор · 3 500 ₽</button></div>
+  <button class="bs" style="width:100%" onclick="closeModal('docgen')">Закрыть</button></div>
+</div>
+<div class="modal-overlay" id="modal-content1">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">✨</div><h3>Контент готов</h3><p>Создан на основе реальных вопросов ваших клиентов</p>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"><button class="copt" onclick="showToast('📋 Скопировано');closeModal('content1')">📋 Скопировать текст</button><button class="copt" onclick="showToast('📱 Опубликовано в Telegram');closeModal('content1')">📱 Опубликовать в Telegram</button><button class="copt" onclick="showToast('📅 Запланировано');closeModal('content1')">📅 Запланировать</button></div>
+  <button class="bs" style="width:100%" onclick="closeModal('content1')">Закрыть</button></div>
+</div>
+<div class="modal-overlay" id="modal-contentgen">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">🤖</div><h3>Генерация контента</h3><p>Проанализируем вопросы клиентов за 30 дней</p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><select class="cs2"><option>Статья для сайта (SEO)</option><option>Пост для Telegram</option><option>Сценарий Reels/Shorts</option></select><select class="cs2"><option>Топ-вопросы за 30 дней</option><option>Конкретная тема</option></select></div>
+  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('contentgen')">✨ Сгенерировать</button><button class="bs" style="width:100%" onclick="closeModal('contentgen')">Отмена</button></div>
+</div>
+<div class="modal-overlay" id="modal-predictor">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">🔮</div><h3>Предсказание исхода</h3><p>Модуль в разработке. Будет сравнивать ваш кейс с 50 000+ судебных решений и давать прогноз в %.</p>
+  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('predictor')">Уведомить о запуске</button><button class="bs" style="width:100%" onclick="closeModal('predictor')">Закрыть</button></div>
+</div>
+<div class="modal-overlay" id="modal-lead">
+  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">👤</div><h3>Карточка лида</h3>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:14px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:var(--text2)">Клиент</span><b style="font-size:13px">Иванова М.С.</b></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:var(--text2)">Тема</span><b style="font-size:13px">Развод, раздел квартиры</b></div>
+    <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text2)">Статус</span><span class="sb shot">Горячий</span></div>
+  </div>
+  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('lead')">Связаться с клиентом</button><button class="bs" style="width:100%" onclick="closeModal('lead')">Закрыть</button></div>
+</div>
+
+<div class="toast" id="toast">✓ <span id="tmsg"></span></div>
+
 <script>
-    function openEditor() {
-        document.getElementById('mainScreen').classList.add('hidden');
-        document.getElementById('editorScreen').classList.remove('hidden');
-    }
-
-    function backToMain() {
-        document.getElementById('editorScreen').classList.add('hidden');
-        document.getElementById('mainScreen').classList.remove('hidden');
-    }
-
-    function closeApp() {
-        if (confirm('Закрыть приложение?')) {
-            window.close();
-        }
-    }
-
-    // Приветствие
-    window.onload = () => {
-        console.log('%cHomeCraft 3D готов! 🔥\nОткрывай редактор и тыкай сколько хочешь — это реальный GitHub-проект Blueprint3D.', 
-                    'color:#14b8a6; font-size:15px; font-weight:bold');
-    };
+function sp(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else { const i=['home','bot','analysis','calc','crm','content','tariffs'].indexOf(id); if(i>=0) document.querySelectorAll('.nav-it')[i].classList.add('active'); }
+  document.getElementById('sa').scrollTop=0;
+  if(id==='crm') setTimeout(initCRM,100);
+  if(id==='analysis') resetAn();
+}
+function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+function sub(id){closeModal(id);showToast('✅ Заявка отправлена! Свяжемся в течение 2 часов');}
+function showToast(msg){const t=document.getElementById('toast');document.getElementById('tmsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function ff(cat,btn){document.querySelectorAll('.ftabs .ftab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.feat-it').forEach(c=>{c.style.display=(cat==='all'||c.dataset.c===cat)?'block':'none';});}
+function fc(t,btn){document.querySelectorAll('#page-content .ftabs .ftab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.ct-it').forEach(c=>{c.style.display=(t==='all'||c.dataset.t===t)?'block':'none';});}
+const scens={
+  divorce:{steps:[{bot:'Понял. При разводе с разделом имущества важна скорость. Есть совместная недвижимость?'},{user:'Да, квартира и машина',bot:'Серьёзно. Без правильного оформления один из супругов может лишиться доли. Есть дети?'},{user:'Двое детей',bot:'⚠️ С двумя детьми суд часто присуждает большую долю той стороне, с которой они остаются. Срок подачи — 3 года. Подключим специалиста? Консультация — 2 900 ₽.'}]},
+  dtp:{steps:[{bot:'ДТП требует быстрых действий. Вы потерпевшая сторона?'},{user:'Да, меня подрезали',bot:'Страховая уже ответила? В 40% случаев страховые занижают выплаты или отказывают.'},{user:'Предложили мало',bot:'🚨 Типичное занижение. Реальная компенсация в среднем в 2.3× выше предложения страховой. Срок обжалования — 6 мес. Подключить юриста по страховым спорам?'}]},
+  debt:{steps:[{bot:'Вы должник или вам должны?'},{user:'Мне должны по договору',bot:'Сумма и как давно нарушены обязательства?'},{user:'500 тысяч, год назад',bot:'📋 Срок давности ещё не истёк (3 года). Досудебная претензия + грамотный иск даёт 80%+ вероятности взыскания. Бесплатная оценка?'}]},
+  worker:{steps:[{bot:'Что случилось: увольнение, невыплата зарплаты?'},{user:'Уволили по собственному',bot:'Вас заставили написать заявление?'},{user:'Давили на меня',bot:'⚡ Принуждение — нарушение ТК РФ. Суд восстанавливает на работе или выплачивает компенсацию. ⏰ Срок — 1 месяц! Записать к специалисту прямо сейчас?'}]}
+};
+let cs=null,cst=0;
+function rs(t){cs=t;cst=0;document.getElementById('copts').innerHTML='';addB(scens[t].steps[0].bot);setTimeout(adv,800);}
+function adv(){if(!cs)return;const ss=scens[cs].steps;if(cst>=ss.length)return;const s=ss[cst];if(s.user){setTimeout(()=>{addU(s.user);setTimeout(()=>{addB(s.bot);cst++;if(cst>=ss.length)setTimeout(addCTA,500);else setTimeout(adv,1200);},600);},900);}else cst++;}
+function addCTA(){document.getElementById('copts').innerHTML='<button class="copt" onclick="showToast(\'🎉 Переход к оплате\');this.parentElement.innerHTML=\'\'">💳 Оплатить консультацию — 2 900 ₽</button><button class="copt" onclick="showToast(\'📞 Менеджер позвонит вам!\');this.parentElement.innerHTML=\'\'">📞 Перезвоните мне</button>';}
+function addMsg(cls,txt){const t=new Date(),ti=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');const el=document.createElement('div');el.className='msg '+cls;el.innerHTML=`<div class="bb">${txt.replace(/\n/g,'<br>')}</div><div class="mt">${ti}</div>`;el.style.opacity='0';el.style.transform='translateY(6px)';const m=document.getElementById('chatMsgs');m.appendChild(el);setTimeout(()=>{el.style.transition='all .25s';el.style.opacity='1';el.style.transform='translateY(0)';},10);m.scrollTop=m.scrollHeight;}
+function addB(t){addMsg('mb',t);}
+function addU(t){addMsg('mu',t);}
+function sendM(){const i=document.getElementById('ci');const txt=i.value.trim();if(!txt)return;addU(txt);i.value='';setTimeout(()=>{addB('Понял вас. Для точной оценки специалисту потребуется больше деталей. Хотите записаться на консультацию?');setTimeout(addCTA,400);},800);}
+document.getElementById('ci').addEventListener('keydown',e=>{if(e.key==='Enter')sendM();});
+function resetAn(){document.getElementById('resCard').classList.remove('show');document.getElementById('qcards').style.display='none';}
+function doUpload(){showToast('📂 Анализируем документ...');setTimeout(()=>{document.getElementById('resCard').classList.add('show');document.getElementById('qcards').style.display='block';animR();animD();showToast('✅ Анализ завершён — 15 рисков');},1800);}
+function animR(){document.querySelectorAll('.rf').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w+'%';},300);});}
+function animD(){let n=0;const el=document.getElementById('dpct');const ring=document.getElementById('dring');const iv=setInterval(()=>{n++;el.textContent=n+'%';ring.style.strokeDashoffset=226-(226*n/100);if(n>=65)clearInterval(iv);},20);}
+const fmt=n=>new Intl.NumberFormat('ru-RU').format(Math.round(n))+' ₽';
+function us(el,vid,f){const v=parseFloat(el.value);document.getElementById(vid).textContent=f(v);const pct=(v-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min))*100;el.style.setProperty('--pct',pct+'%');}
+function cAlim(){const s=parseFloat(document.getElementById('sal').value)||0;const k=parseFloat(document.getElementById('kids').value);document.getElementById('alR').textContent=s>0?fmt(s*k):'—';}
+function cDtp(){const c=parseFloat(document.getElementById('carD').value)||0;const m=parseFloat(document.getElementById('medD').value)||0;const g=parseFloat(document.getElementById('guilt').value);document.getElementById('dtpR').textContent=fmt((c+m+30000)*g);}
+function cCase(){const mp={family:[.1,15000],civil:[.07,20000],criminal:[0,150000],arbitration:[.05,30000]};const t=document.getElementById('caseT').value;const a=parseFloat(document.getElementById('claimA').value)||0;const[p,b]=mp[t];document.getElementById('caseR').textContent=fmt(Math.max(b,a*p));const ss={family:'плюс представительство',civil:'плюс досудебное урегулирование',criminal:'ведение под ключ',arbitration:'плюс апелляция'};document.getElementById('caseRs').textContent=ss[t];}
+function cDead(){const d=document.getElementById('vDate').value;if(!d)return;const y=parseInt(document.getElementById('vType').value);const dl=new Date(d);dl.setFullYear(dl.getFullYear()+y);const days=Math.round((dl-new Date())/86400000);const el=document.getElementById('deadR'),sub=document.getElementById('deadRs');if(days<0){el.textContent='⛔ Истёк';el.style.color='var(--red)';sub.textContent=`Истёк ${Math.abs(days)} дней назад`;}else if(days<30){el.textContent=`⚠️ ${days} дн.`;el.style.color='var(--accent4)';sub.textContent='Критически мало! Срочно к юристу';}else if(days<180){el.textContent=`✅ ${days} дн.`;el.style.color='var(--accent3)';sub.textContent=`До ${dl.toLocaleDateString('ru-RU')}`;}else{el.textContent=`✅ ${Math.round(days/30)} мес.`;el.style.color='var(--accent3)';sub.textContent=`Дедлайн: ${dl.toLocaleDateString('ru-RU')}`;}}
+function initCRM(){const ds=[{id:'mb1',d:[65,72,58,80,90,75,85,95,88,110]},{id:'mb2',d:[15,18,12,22,28,20,25,30,27,35]},{id:'mb3',d:[400,450,380,520,600,480,560,680,700,820]},{id:'mb4',d:[18,19,17,22,24,21,23,25,24,27]}];ds.forEach(({id,d})=>{const el=document.getElementById(id);if(!el||el.children.length)return;const mx=Math.max(...d);d.forEach((v,i)=>{const b=document.createElement('div');b.className='mbar'+(i===d.length-1?' hi':'');b.style.height='0';el.appendChild(b);setTimeout(()=>{b.style.transition=`height .5s ${i*.04}s`;b.style.height=(v/mx*36)+'px';},50);});});setTimeout(()=>{document.querySelectorAll('.ff').forEach(f=>{f.style.width=f.dataset.w+'%';});},200);}
+document.querySelectorAll('input[type=range]').forEach(el=>{const v=parseFloat(el.value),mn=parseFloat(el.min),mx=parseFloat(el.max);el.style.setProperty('--pct',((v-mn)/(mx-mn)*100)+'%');});
+cAlim();cDtp();cCase();
 </script>
 </body>
 </html>
