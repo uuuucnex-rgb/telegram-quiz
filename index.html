@@ -2,559 +2,2382 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Сервис для Адвокатов · Уфа</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIZION — Умная Визуализация для Строительного Бизнеса</title>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
 :root {
-  --bg:#0a0a0f; --bg2:#111118; --bg3:#16161f;
-  --card:#1a1a25; --card2:#1e1e2a;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
-  --text:#f0f0f5; --text2:#8888a0; --text3:#555568;
-  --accent:#6c63ff; --accent2:#a78bfa; --accent3:#34d399; --accent4:#fbbf24;
-  --red:#f87171; --blue:#60a5fa;
-  --r:14px; --rs:10px;
+  --bg: #050508;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f0f0f5;
+  --muted: rgba(240,240,245,0.45);
+  --accent1: #7c6af7;
+  --accent2: #f064c8;
+  --accent3: #40d9a8;
+  --accent4: #f5a623;
+  --gold: #e8c97a;
+  --neon: #b8ff6e;
+  --glow1: rgba(124,106,247,0.35);
+  --glow2: rgba(240,100,200,0.25);
+  --glow3: rgba(64,217,168,0.2);
 }
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;position:relative;}
-.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;}
-.orb1{width:500px;height:500px;background:#6c63ff;top:-200px;left:-100px;animation:o1 20s ease-in-out infinite alternate;}
-.orb2{width:400px;height:400px;background:#a78bfa;top:20%;right:-100px;animation:o2 25s ease-in-out infinite alternate;}
-.orb3{width:350px;height:350px;background:#34d399;bottom:-100px;left:30%;animation:o3 18s ease-in-out infinite alternate;}
-@keyframes o1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.1)}}
-@keyframes o2{0%{transform:translate(0,0)}100%{transform:translate(-40px,60px) scale(.9)}}
-@keyframes o3{0%{transform:translate(0,0)}100%{transform:translate(30px,-40px) scale(1.05)}}
-.app-header{position:relative;z-index:10;padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,15,.8);backdrop-filter:blur(20px);flex-shrink:0;}
-.logo-row{display:flex;align-items:center;gap:10px;}
-.logo-ic{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:17px;}
-.logo-t{line-height:1.2;} .logo-t b{font-size:14px;font-weight:700;letter-spacing:-.3px;display:block;} .logo-t span{font-size:10px;color:var(--text2);}
-.hdr-r{display:flex;align-items:center;gap:8px;}
-.live-b{display:flex;align-items:center;gap:5px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--accent3);}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:lp 1.5s infinite;}
-@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(52,211,153,.4)}50%{opacity:.6;box-shadow:0 0 0 4px rgba(52,211,153,0)}}
-.hdr-btn{width:34px;height:34px;border-radius:9px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;font-weight:300;color:var(--text2);}
-.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;z-index:1;-webkit-overflow-scrolling:touch;padding-bottom:80px;}
-.scroll-area::-webkit-scrollbar{display:none;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;align-items:stretch;height:68px;padding-bottom:env(safe-area-inset-bottom,0);}
-.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:8px 2px;border:none;background:none;}
-.nav-it .ni{font-size:20px;transition:transform .2s;line-height:1;}
-.nav-it .nl{font-size:10px;font-weight:500;color:var(--text3);transition:color .2s;}
-.nav-it.active .nl{color:var(--accent2);}
-.nav-it.active .ni{transform:scale(1.1);}
-.page{display:none;}
-.page.active{display:block;animation:pi .22s ease;}
-@keyframes pi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.sec{padding:18px 16px;}
-.hero-strip{padding:20px 16px 16px;background:linear-gradient(135deg,rgba(108,99,255,.15),rgba(167,139,250,.07));border-bottom:1px solid var(--border);}
-.hero-strip h1{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;line-height:1.25;}
-.hero-strip h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero-strip p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
-.stats-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;}
-.stats-scroll::-webkit-scrollbar{display:none;}
-.stat-pill{flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;text-align:center;min-width:92px;}
-.sn{font-size:20px;font-weight:700;line-height:1;margin-bottom:3px;}
-.sn.v{color:var(--accent2);}.sn.g{color:var(--accent3);}.sn.y{color:var(--accent4);}
-.sl{font-size:10px;color:var(--text2);line-height:1.3;}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.sec-hdr h2{font-size:16px;font-weight:700;letter-spacing:-.3px;}
-.sec-hdr a{font-size:12px;color:var(--accent2);cursor:pointer;}
-.ftabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
-.ftabs::-webkit-scrollbar{display:none;}
-.ftab{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap;}
-.ftab.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;cursor:pointer;}
-.card:active{border-color:var(--border2);}
-.cb{padding:14px;}
-.crow{display:flex;align-items:flex-start;gap:12px;}
-.cic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.ci{flex:1;min-width:0;}
-.ct{font-size:14px;font-weight:600;margin-bottom:3px;line-height:1.3;}
-.cs{font-size:12px;color:var(--text2);line-height:1.5;}
-.cmeta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
-.tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;}
-.tv{background:rgba(108,99,255,.15);color:var(--accent2);}
-.tg{background:rgba(52,211,153,.12);color:var(--accent3);}
-.ty{background:rgba(251,191,36,.12);color:var(--accent4);}
-.tr{background:rgba(248,113,113,.12);color:var(--red);}
-.chat-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.chat-hd{background:linear-gradient(135deg,rgba(108,99,255,.3),rgba(167,139,250,.18));border-bottom:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:10px;}
-.c-av{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;}
-.c-hi{flex:1;} .c-hi b{font-size:13px;font-weight:700;display:block;} .c-hi span{font-size:10px;color:var(--accent2);}
-.c-on{width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 6px var(--accent3);}
-.chat-msgs{padding:12px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
-.chat-msgs::-webkit-scrollbar{display:none;}
-.msg{max-width:82%;}
-.mb{align-self:flex-start;}.mu{align-self:flex-end;}
-.bb{padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5;}
-.mb .bb{background:var(--card2);border-bottom-left-radius:4px;}
-.mu .bb{background:var(--accent);border-bottom-right-radius:4px;}
-.mt{font-size:10px;color:var(--text3);margin-top:3px;padding:0 3px;}
-.mb .mt{text-align:left;}.mu .mt{text-align:right;}
-.copts{padding:0 12px 10px;display:flex;flex-direction:column;gap:6px;}
-.copt{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:10px;padding:9px 12px;font-size:12.5px;color:var(--accent2);cursor:pointer;text-align:left;transition:all .18s;font-family:inherit;font-weight:500;}
-.copt:active{background:rgba(108,99,255,.2);}
-.chat-inp-row{border-top:1px solid var(--border);padding:10px 12px;display:flex;gap:8px;}
-.c-inp{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:13px;color:var(--text);outline:none;font-family:inherit;}
-.c-inp:focus{border-color:var(--accent);}
-.c-send{width:34px;height:34px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-.c-send:active{transform:scale(.92);}
-.upload-z{border:2px dashed rgba(108,99,255,.3);background:rgba(108,99,255,.05);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px;}
-.upload-z:active{border-color:var(--accent);background:rgba(108,99,255,.1);}
-.upload-z h3{font-size:14px;font-weight:600;margin-bottom:5px;}
-.upload-z p{font-size:12px;color:var(--text2);}
-.res-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:none;}
-.res-card.show{display:block;animation:pi .3s ease;}
-.res-hd{padding:14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;}
-.res-hd h3{font-size:14px;font-weight:700;margin-bottom:2px;}
-.res-hd span{font-size:11px;color:var(--text2);}
-.res-b{padding:14px;}
-.donut-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
-.donut-w{position:relative;width:88px;height:88px;flex-shrink:0;}
-.donut-w svg{transform:rotate(-90deg);}
-.donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.dp{font-size:20px;font-weight:700;color:var(--accent2);line-height:1;}
-.dl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-.d-info h4{font-size:14px;font-weight:700;margin-bottom:4px;}
-.d-info p{font-size:12px;color:var(--text2);line-height:1.55;}
-.vp{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;}
-.vpg{background:rgba(52,211,153,.1);color:var(--accent3);border:1px solid rgba(52,211,153,.2);}
-.risk-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.r-hdr{display:flex;justify-content:space-between;margin-bottom:4px;}
-.r-nm{font-size:12px;color:var(--text2);}
-.r-pct{font-size:12px;font-weight:600;}
-.r-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
-.rf{height:100%;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1);}
-.rf-r{background:var(--red);}.rf-y{background:var(--accent4);}.rf-g{background:var(--accent3);}
-.res-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-.res-tag{font-size:11px;padding:4px 9px;border-radius:6px;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);}
-.btn-row{display:flex;gap:10px;}
-.btn-row .bp,.btn-row .bs{flex:1;text-align:center;}
-.calc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
-.calc-t{font-size:14px;font-weight:700;margin-bottom:3px;}
-.calc-d{font-size:12px;color:var(--text2);margin-bottom:14px;}
-.cf{margin-bottom:12px;}
-.cf label{display:block;font-size:11px;color:var(--text2);font-weight:500;margin-bottom:5px;}
-.ci2{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);outline:none;font-family:inherit;}
-.ci2:focus{border-color:var(--accent);}
-.cs2{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);outline:none;font-family:inherit;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
-.sl-row{display:flex;align-items:center;gap:10px;}
-.sl-val{font-size:13px;font-weight:600;color:var(--accent2);min-width:80px;text-align:right;}
-input[type=range]{flex:1;height:4px;border-radius:2px;outline:none;-webkit-appearance:none;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,50%),rgba(255,255,255,.1) var(--pct,50%),rgba(255,255,255,.1) 100%);}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer;}
-.cr-box{background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(167,139,250,.06));border:1px solid rgba(108,99,255,.2);border-radius:var(--rs);padding:14px;text-align:center;margin-top:14px;}
-.cr-lbl{font-size:11px;color:var(--text2);margin-bottom:3px;}
-.cr-val{font-size:26px;font-weight:700;color:var(--accent2);line-height:1;}
-.cr-sub{font-size:11px;color:var(--text3);margin-top:3px;}
-.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.mbox{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
-.mbox .ml{font-size:11px;color:var(--text2);margin-bottom:6px;}
-.mbox .mv{font-size:24px;font-weight:700;line-height:1;margin-bottom:4px;}
-.mbox .mc{font-size:11px;}
-.up{color:var(--accent3);}.dn{color:var(--red);}
-.mbars{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:8px;}
-.mbar{flex:1;border-radius:3px 3px 0 0;background:rgba(108,99,255,.2);min-height:3px;transition:height .5s;}
-.mbar.hi{background:var(--accent);}
-.fn-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;}
-.fn-box h3{font-size:13px;font-weight:700;margin-bottom:14px;}
-.fn-s{margin-bottom:10px;}
-.fn-h{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
-.fn-h span:first-child{color:var(--text2);} .fn-h span:last-child{font-weight:600;}
-.fb{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
-.ff{height:100%;border-radius:4px;width:0;transition:width 1s cubic-bezier(.16,1,.3,1);}
-.lt-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
-.l-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;}
-.l-row:last-child{border-bottom:none;}
-.l-row:active{background:rgba(255,255,255,.03);}
-.lav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
-.li{flex:1;min-width:0;} .ln{font-size:13px;font-weight:600;} .lt{font-size:11px;color:var(--text2);}
-.sb{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;}
-.shot{background:rgba(248,113,113,.15);color:var(--red);}
-.swarm{background:rgba(251,191,36,.12);color:var(--accent4);}
-.spaid{background:rgba(52,211,153,.12);color:var(--accent3);}
-.scold{background:rgba(255,255,255,.06);color:var(--text3);}
-.q-list{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.q-it{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);}
-.q-it:last-child{border-bottom:none;}
-.qn{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
-.qt{flex:1;} .qt b{font-size:13px;font-weight:500;display:block;} .qt span{font-size:11px;color:var(--text2);}
-.qp{font-size:12px;font-weight:700;}
-.cc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;}
-.cc:active{border-color:var(--border2);}
-.ctl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:7px;}
-.ctt{font-size:14px;font-weight:600;line-height:1.35;margin-bottom:6px;}
-.ctm{font-size:11px;color:var(--text3);margin-bottom:10px;}
-.cts{display:flex;gap:14px;padding-top:10px;border-top:1px solid var(--border);}
-.cst{font-size:11px;color:var(--text2);} .cst b{color:var(--text);}
-.tc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:10px;position:relative;}
-.tc.feat{border-color:var(--accent);background:linear-gradient(135deg,rgba(108,99,255,.1),var(--card));}
-.fb2{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;}
-.tn{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;}
-.tp{font-size:32px;font-weight:700;letter-spacing:-1px;margin-bottom:2px;}
-.tp sub{font-size:14px;font-weight:400;color:var(--text2);}
-.tpr{font-size:12px;color:var(--text2);margin-bottom:16px;}
-.tfs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.tf{display:flex;align-items:center;gap:8px;font-size:13px;}
-.ck{color:var(--accent3);font-size:13px;} .cx{color:var(--text3);font-size:13px;}
-.btn-t{width:100%;padding:12px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .2s;}
-.btn-t.p{background:var(--accent);color:#fff;} .btn-t.p:active{background:#5a52d5;}
-.btn-t.o{background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border);} .btn-t.o:active{background:rgba(255,255,255,.1);}
-.bp{background:var(--accent);color:#fff;border:none;border-radius:var(--rs);padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
-.bp:active{background:#5a52d5;transform:scale(.98);}
-.bs{background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
-.bs:active{background:rgba(255,255,255,.1);}
-.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(12px);align-items:flex-end;}
-.modal-overlay.open{display:flex;animation:mf .2s ease;}
-@keyframes mf{from{opacity:0}to{opacity:1}}
-.msheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px 18px 40px;width:100%;border-top:1px solid var(--border2);animation:su .3s cubic-bezier(.34,1.56,.64,1);max-height:80vh;overflow-y:auto;}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.mhandle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 18px;}
-.msheet h3{font-size:18px;font-weight:700;margin-bottom:8px;}
-.msheet p{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(30px);background:rgba(30,30,40,.97);color:var(--text);padding:10px 18px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;border:1px solid var(--border2);backdrop-filter:blur(10px);display:flex;align-items:center;gap:7px;pointer-events:none;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0a0a10; }
+::-webkit-scrollbar-thumb { background: var(--accent1); border-radius: 2px; }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,8,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border2);
+}
+
+/* SECTIONS */
+section {
+  min-height: 100vh;
+  padding: 100px 40px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* AURORA BG */
+.aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== HERO ===== */
+#hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 120px;
+}
+
+.aurora-1 { width:700px; height:700px; background: radial-gradient(circle, var(--glow1) 0%, transparent 70%); top:-200px; left:-200px; animation: drift1 12s ease-in-out infinite; }
+.aurora-2 { width:500px; height:500px; background: radial-gradient(circle, var(--glow2) 0%, transparent 70%); top:100px; right:-100px; animation: drift2 15s ease-in-out infinite; }
+.aurora-3 { width:600px; height:600px; background: radial-gradient(circle, var(--glow3) 0%, transparent 70%); bottom:-200px; left:50%; transform:translateX(-50%); animation: drift3 18s ease-in-out infinite; }
+
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,40px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,60px)} }
+@keyframes drift3 { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-40px)} }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent3);
+  background: rgba(64,217,168,0.1);
+  border: 1px solid rgba(64,217,168,0.3);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.hero-eyebrow .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 10vw, 130px);
+  line-height: 0.9;
+  letter-spacing: 4px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.hero-title .line1 { color: var(--text); display: block; }
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 50%, var(--accent4) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite, fadeUp 0.7s ease forwards;
+  animation-delay: 0s, 0.1s;
+}
+
+@keyframes shimmer { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+
+.hero-sub {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+  animation: fadeUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin-bottom: 48px;
+  animation: fadeUp 0.9s ease forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.hero-stat { text-align: center; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--gold), var(--accent4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; margin-top: 4px; }
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  animation: fadeUp 1s ease forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+  box-shadow: 0 0 40px var(--glow1);
+}
+
+.hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 60px var(--glow1), 0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* GLASS CARD */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s;
+}
+
+.glass:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* SECTION TITLE */
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent1);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.section-sub {
+  font-size: 18px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 560px;
+  margin-bottom: 60px;
+}
+
+/* ===== PROBLEM ===== */
+#problem { background: var(--bg); }
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.pain-card {
+  padding: 32px;
+  border-radius: 20px;
+  background: rgba(255,60,60,0.04);
+  border: 1px solid rgba(255,60,60,0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.pain-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,80,80,0.6), transparent);
+}
+
+.pain-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.pain-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.pain-text {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.pain-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: rgba(255,80,80,0.7);
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+}
+
+/* ===== PRODUCTS ===== */
+#products { background: #060610; }
+
+.product-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 6px;
+  border-radius: 16px;
+  width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.3s;
+  background: transparent;
+  color: var(--muted);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.product-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.product-mockup {
+  background: linear-gradient(135deg, rgba(124,106,247,0.1), rgba(240,100,200,0.1));
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-mockup::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.phone-frame {
+  width: 160px;
+  height: 280px;
+  background: #111118;
+  border-radius: 28px;
+  border: 2px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1a1a28 0%, #0f0f1a 100%);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phone-header {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--accent3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.phone-room-img {
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(135deg, #2a2a3a, #1e1e2e);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.phone-btn-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.phone-btn {
+  font-size: 7px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: rgba(124,106,247,0.25);
+  color: #a09ff0;
+  border: 1px solid rgba(124,106,247,0.3);
+}
+
+.phone-result {
+  flex: 1;
+  background: linear-gradient(135deg, rgba(124,106,247,0.2), rgba(64,217,168,0.15));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--accent3);
+  font-weight: 600;
+  border: 1px solid rgba(64,217,168,0.2);
+}
+
+.product-details { padding: 20px; }
+
+.product-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--text), var(--muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.product-sold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(232,201,122,0.1);
+  border: 1px solid rgba(232,201,122,0.3);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.product-desc {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.feature-item .icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.icon-purple { background: rgba(124,106,247,0.2); }
+.icon-green { background: rgba(64,217,168,0.2); }
+.icon-pink { background: rgba(240,100,200,0.2); }
+.icon-gold { background: rgba(232,201,122,0.2); }
+
+/* ===== CONVERSION ===== */
+#conversion { background: var(--bg); }
+
+.conv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.funnel-vis {
+  padding: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+.funnel-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.funnel-stage {
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.funnel-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.funnel-bar-wrap {
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
+.funnel-bar {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.funnel-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+}
+
+.conv-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.metric-card {
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.metric-card:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+
+.mc-purple::before { background: var(--accent1); }
+.mc-green::before { background: var(--accent3); }
+.mc-pink::before { background: var(--accent2); }
+.mc-gold::before { background: var(--gold); }
+
+.metric-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.metric-unit { font-size: 18px; color: var(--muted); }
+.metric-delta {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+.delta-up { background: rgba(64,217,168,0.15); color: var(--accent3); }
+.metric-desc { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* ===== MARKET ===== */
+#market { background: #060610; }
+
+.market-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.market-card {
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.market-card:hover { background: var(--surface2); border-color: var(--border2); transform: translateY(-4px); }
+
+.market-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 54px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.market-label { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+/* COMPARISON TABLE */
+.comp-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 40px;
+}
+
+.comp-table th {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.comp-table th.highlight {
+  background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(240,100,200,0.1));
+  color: var(--text);
+  border-radius: 12px 12px 0 0;
+  border: 1px solid rgba(124,106,247,0.3);
+  border-bottom: none;
+}
+
+.comp-table td {
+  padding: 14px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.comp-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.comp-table td.highlight {
+  background: rgba(124,106,247,0.06);
+  border-left: 1px solid rgba(124,106,247,0.3);
+  border-right: 1px solid rgba(124,106,247,0.3);
+}
+
+.comp-table tr:last-child td.highlight {
+  border-radius: 0 0 12px 12px;
+  border-bottom: 1px solid rgba(124,106,247,0.3);
+}
+
+.check { color: var(--accent3); font-size: 16px; }
+.cross { color: rgba(255,80,80,0.6); font-size: 16px; }
+.partial { color: var(--gold); font-size: 14px; }
+
+/* ===== CALCULATOR / PNL ===== */
+#pnl { background: var(--bg); }
+
+.calc-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.calc-card {
+  padding: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+.calc-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calc-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.slider-row {
+  margin-bottom: 24px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.slider-val {
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+}
+
+input[type=range] {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  accent-color: var(--accent1);
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--glow1);
+}
+
+.pnl-result {
+  margin-top: 28px;
+  padding: 24px;
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 16px;
+}
+
+.pnl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+
+.pnl-row:last-child { border: none; }
+.pnl-row .label { color: var(--muted); }
+
+.pnl-row .value {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.pnl-row.total .value {
+  font-size: 20px;
+  color: var(--accent3);
+}
+
+.pnl-row.total .label {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* CHART */
+.chart-container {
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 200px;
+  border-bottom: 1px solid var(--border2);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.bar-wrap {
+  width: 100%;
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 180px;
+}
+
+.bar {
+  flex: 1;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.5s ease;
+  position: relative;
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.bar:hover { filter: brightness(1.3); }
+.bar-label { font-size: 11px; color: var(--muted); text-align: center; }
+
+.bar-rev { background: linear-gradient(180deg, var(--accent1), rgba(124,106,247,0.4)); }
+.bar-cost { background: linear-gradient(180deg, rgba(255,80,80,0.6), rgba(255,80,80,0.2)); }
+.bar-profit { background: linear-gradient(180deg, var(--accent3), rgba(64,217,168,0.3)); }
+
+/* ===== PRICING ===== */
+#pricing { background: #060610; }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.price-card {
+  padding: 36px 28px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: all 0.3s;
+}
+
+.price-card.popular {
+  background: linear-gradient(135deg, rgba(124,106,247,0.12), rgba(240,100,200,0.08));
+  border-color: rgba(124,106,247,0.4);
+  transform: translateY(-12px);
+}
+
+.price-card.popular::before {
+  content: 'ХИТ';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+
+.price-tier {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.price-period {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.price-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.price-features li {
+  font-size: 14px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-features li::before {
+  content: '✓';
+  color: var(--accent3);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.price-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.price-btn.primary {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border: none;
+  color: white;
+  box-shadow: 0 0 30px var(--glow1);
+}
+
+.price-btn:hover { transform: translateY(-2px); }
+
+/* ===== SALES GUIDE ===== */
+#sales { background: var(--bg); }
+
+.sales-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.pain-trigger {
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.pain-trigger:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+}
+
+.pain-q {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.pain-q .emoji { font-size: 20px; flex-shrink: 0; }
+.pain-a { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+.script-card {
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(124,106,247,0.07), rgba(240,100,200,0.05));
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 24px;
+}
+
+.script-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--accent1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.script-step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-body { flex: 1; }
+.step-label { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.step-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* ===== ROADMAP ===== */
+#roadmap { background: #060610; }
+
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent1), var(--accent2), var(--accent3));
+}
+
+.timeline-item {
+  position: relative;
+  padding: 28px 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.timeline-item:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+  transform: translateX(8px);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -34px;
+  top: 32px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--accent1);
+  background: var(--bg);
+  box-shadow: 0 0 12px var(--glow1);
+}
+
+.tl-phase {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent1);
+  margin-bottom: 6px;
+}
+
+.tl-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.tl-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+.tl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tl-tag {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 80px 40px 40px;
+  text-align: center;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  letter-spacing: 8px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+
+.footer-tagline {
+  font-size: 18px;
+  color: var(--muted);
+  margin-bottom: 48px;
+}
+
+.contact-grid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.contact-item {
+  padding: 20px 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.contact-item:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+  transform: translateY(-4px);
+}
+
+.contact-type { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.contact-val { font-size: 16px; font-weight: 700; color: var(--text); }
+
+/* ===== RESPONSIVE HELPERS ===== */
+@media (max-width: 900px) {
+  .pain-grid, .market-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .product-showcase, .conv-grid, .calc-wrapper, .sales-grid { grid-template-columns: 1fr; }
+  section { padding: 100px 20px 60px; }
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+}
+
+/* ANIMATE ON SCROLL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* PROGRESS BAR TOP */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+  z-index: 9999;
+  transition: width 0.1s;
+}
+
+/* FLOATING BADGE */
+.float-badge {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 8px 32px var(--glow1);
+  transition: all 0.3s;
+  text-decoration: none;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.float-badge:hover { transform: scale(1.05); box-shadow: 0 12px 40px var(--glow1); }
+
+/* GLOW TEXT UTILITY */
+.glow-text { text-shadow: 0 0 30px currentColor; }
+
+/* GRID PATTERN */
+.grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* NEON BADGE */
+.neon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.neon-green { background: rgba(184,255,110,0.1); border: 1px solid rgba(184,255,110,0.3); color: var(--neon); }
+.neon-purple { background: rgba(124,106,247,0.15); border: 1px solid rgba(124,106,247,0.3); color: var(--accent1); }
+.neon-pink { background: rgba(240,100,200,0.12); border: 1px solid rgba(240,100,200,0.3); color: var(--accent2); }
+
 </style>
 </head>
 <body>
-<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
 
-<header class="app-header">
-  <div class="logo-row">
-    <div class="logo-ic">⚖️</div>
-    <div class="logo-t"><b>Сервис для Адвокатов</b><span>Уфа · Башкирия · 2026</span></div>
-  </div>
-  <div class="hdr-r">
-    <div class="live-b"><div class="live-dot"></div>LIVE</div>
-    <div class="hdr-btn" onclick="openModal('contact')">+</div>
-  </div>
-</header>
+<div id="progress-bar"></div>
 
-<div class="scroll-area" id="sa">
-
-<!-- ═══ ОБЗОР ═══ -->
-<div id="page-home" class="page active">
-  <div class="hero-strip">
-    <h1>Умный сервис для<br><em>юридического бизнеса</em></h1>
-    <p>Автоматизация консультаций, квалификация клиентов и аналитика. Работает 24/7.</p>
-    <div class="stats-scroll">
-      <div class="stat-pill"><div class="sn v">−70%</div><div class="sl">Холостых<br>обращений</div></div>
-      <div class="stat-pill"><div class="sn g">3×</div><div class="sl">Рост<br>конверсии</div></div>
-      <div class="stat-pill"><div class="sn y">24/7</div><div class="sl">Режим<br>работы</div></div>
-      <div class="stat-pill"><div class="sn v">248</div><div class="sl">Лидов<br>в июле</div></div>
-    </div>
-  </div>
-  <div class="sec">
-    <div class="sec-hdr"><h2>Возможности</h2></div>
-    <div class="ftabs">
-      <button class="ftab active" onclick="ff('all',this)">Все</button>
-      <button class="ftab" onclick="ff('consult',this)">Консультация</button>
-      <button class="ftab" onclick="ff('analytics',this)">Аналитика</button>
-      <button class="ftab" onclick="ff('content',this)">Контент</button>
-    </div>
-    <div id="feat-list">
-      <div class="card feat-it" data-c="consult" onclick="sp('bot')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(108,99,255,.15)">🤖</div><div class="ci"><div class="ct">ИИ-консультант и продажник</div><div class="cs">Выявляет боль, усиливает срочность, закрывает клиента на оплату. Это не бот — менеджер по продажам.</div></div></div><div class="cmeta"><span class="tag tv">Демо →</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="consult" onclick="sp('analysis')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(167,139,250,.15)">📋</div><div class="ci"><div class="ct">ИИ-анализ дела</div><div class="cs">Загрузите документы — система найдёт риски и даст прогноз вероятности выигрыша.</div></div></div><div class="cmeta"><span class="tag tv">Загрузить →</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="analytics" onclick="sp('calc')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">🧮</div><div class="ci"><div class="ct">Юридические калькуляторы</div><div class="cs">Алименты, ДТП, стоимость дела, срок давности — клиент видит цифры сразу.</div></div></div><div class="cmeta"><span class="tag tg">Попробовать →</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="analytics" onclick="sp('crm')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(251,191,36,.12)">📊</div><div class="ci"><div class="ct">CRM и аналитика</div><div class="cs">Лиды, оплаты, воронка, топ вопросов — полная картина в реальном времени.</div></div></div><div class="cmeta"><span class="tag ty">Дашборд →</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="consult" onclick="openModal('docgen')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(248,113,113,.12)">📄</div><div class="ci"><div class="ct">Автогенерация документов</div><div class="cs">Иски, жалобы, договоры — бесплатный шаблон или платный кастомный документ.</div></div></div><div class="cmeta"><span class="tag tr">SaaS-модуль</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="content" onclick="sp('content')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(96,165,250,.12)">✍️</div><div class="ci"><div class="ct">Контент-фабрика</div><div class="cs">Анализирует вопросы клиентов и создаёт статьи, посты, Reels автоматически.</div></div></div><div class="cmeta"><span class="tag tv">Смотреть →</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-      <div class="card feat-it" data-c="analytics" onclick="openModal('predictor')">
-        <div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">🔮</div><div class="ci"><div class="ct">Предсказание исхода дела</div><div class="cs">Сравнивает кейс с 50 000+ судебных решений и даёт вероятность выигрыша.</div></div></div><div class="cmeta"><span class="tag tg">Скоро</span><span style="color:var(--text3)">›</span></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ БОТ ═══ -->
-<div id="page-bot" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">ИИ-консультант</div><h2>Демо бота</h2></div></div>
-    <div class="chat-wrap">
-      <div class="chat-hd"><div class="c-av">⚖️</div><div class="c-hi"><b>Сервис для Адвокатов</b><span>Юридический ассистент</span></div><div class="c-on"></div></div>
-      <div class="chat-msgs" id="chatMsgs">
-        <div class="msg mb"><div class="bb">Здравствуйте! Опишите ситуацию — помогу разобраться 👋</div><div class="mt">сейчас</div></div>
-      </div>
-      <div class="copts" id="copts">
-        <button class="copt" onclick="rs('divorce')">💔 Развод и раздел имущества</button>
-        <button class="copt" onclick="rs('dtp')">🚗 Попал в ДТП</button>
-        <button class="copt" onclick="rs('debt')">💸 Проблемы с долгами</button>
-        <button class="copt" onclick="rs('worker')">👔 Трудовой спор</button>
-      </div>
-      <div class="chat-inp-row">
-        <input class="c-inp" id="ci" type="text" placeholder="Напишите вашу ситуацию...">
-        <button class="c-send" onclick="sendM()">→</button>
-      </div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <div class="cb">
-        <div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Как работает</div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(108,99,255,.2);color:var(--accent2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Выявляет боль</div><div style="font-size:12px;color:var(--text2)">Направленные вопросы, определение типа проблемы</div></div></div>
-          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent2);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Усиливает срочность</div><div style="font-size:12px;color:var(--text2)">Объясняет риски промедления и сроки давности</div></div></div>
-          <div style="display:flex;gap:10px"><div style="width:26px;height:26px;border-radius:8px;background:rgba(52,211,153,.15);color:var(--accent3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">Закрывает на оплату</div><div style="font-size:12px;color:var(--text2)">Консультация или передача тёплого лида юристу</div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ АНАЛИЗ ═══ -->
-<div id="page-analysis" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">ИИ-анализ</div><h2>Анализ дела</h2></div></div>
-    <div class="upload-z" onclick="doUpload()">
-      <div style="font-size:40px;margin-bottom:10px">📂</div>
-      <h3>Загрузить документ</h3>
-      <p>PDF, DOC, DOCX, TXT — договоры, переписка, иски<br>Нажмите для выбора файла</p>
-    </div>
-    <div class="res-card" id="resCard">
-      <div class="res-hd"><span style="font-size:22px">📋</span><div><h3>Анализ завершён</h3><span>Договор купли-продажи.pdf · 15 рисков</span></div><span class="tag tg" style="margin-left:auto">✓ Готово</span></div>
-      <div class="res-b">
-        <div class="donut-row">
-          <div class="donut-w">
-            <svg width="88" height="88" viewBox="0 0 88 88"><circle cx="44" cy="44" r="36" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="9"/><circle cx="44" cy="44" r="36" fill="none" stroke="url(#dg)" stroke-width="9" stroke-dasharray="226" stroke-dashoffset="226" stroke-linecap="round" id="dring"/><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6c63ff"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs></svg>
-            <div class="donut-c"><div class="dp" id="dpct">0%</div><div class="dl">выигрыш</div></div>
-          </div>
-          <div class="d-info"><div class="vp vpg">✅ Дело перспективное</div><h4>Вероятность: 65%</h4><p>На основе 4 200 аналогичных дел. Срок подачи — 14 дней.</p></div>
-        </div>
-        <div class="risk-list">
-          <div><div class="r-hdr"><span class="r-nm">Нарушение сроков поставки</span><span class="r-pct" style="color:var(--red)">85%</span></div><div class="r-bar"><div class="rf rf-r" data-w="85"></div></div></div>
-          <div><div class="r-hdr"><span class="r-nm">Спорное право собственности</span><span class="r-pct" style="color:var(--accent4)">52%</span></div><div class="r-bar"><div class="rf rf-y" data-w="52"></div></div></div>
-          <div><div class="r-hdr"><span class="r-nm">Двусмысленность условий</span><span class="r-pct" style="color:var(--accent4)">38%</span></div><div class="r-bar"><div class="rf rf-y" data-w="38"></div></div></div>
-          <div><div class="r-hdr"><span class="r-nm">Неустойка соответствует норме</span><span class="r-pct" style="color:var(--accent3)">90%</span></div><div class="r-bar"><div class="rf rf-g" data-w="90"></div></div></div>
-        </div>
-        <div class="res-tags">
-          <span class="res-tag">📅 Срок: 14 дней</span><span class="res-tag">⚖️ Арбитраж</span><span class="res-tag">💰 850 000 ₽</span><span class="res-tag">🔍 3 доказательства</span>
-        </div>
-        <div class="btn-row">
-          <button class="bp" onclick="openModal('consult')">К юристу</button>
-          <button class="bs" onclick="openModal('docgen')">Сгенерировать иск</button>
-        </div>
-      </div>
-    </div>
-    <div id="qcards" style="display:none;margin-top:14px">
-      <div class="sec-hdr"><h2>Разбор вопросов</h2></div>
-      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(248,113,113,.12)">⚠️</div><div class="ci"><div class="ct">Нарушение сроков — высокий риск</div><div class="cs">Зафиксированные сроки поставки нарушены. Основание для взыскания неустойки по ст. 330 ГК РФ.</div></div></div><div class="cmeta"><span class="tag tr">Критично</span></div></div></div>
-      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(251,191,36,.12)">🔍</div><div class="ci"><div class="ct">Право собственности — спорный момент</div><div class="cs">Пункт 3.4 содержит неоднозначную формулировку о переходе права. Требует уточнения.</div></div></div><div class="cmeta"><span class="tag ty">Требует внимания</span></div></div></div>
-      <div class="card"><div class="cb"><div class="crow"><div class="cic" style="background:rgba(52,211,153,.12)">✅</div><div class="ci"><div class="ct">Неустойка — сильная позиция</div><div class="cs">Размер 0.1% в день соответствует норме. Суды, как правило, не снижают такой размер.</div></div></div><div class="cmeta"><span class="tag tg">Ваш плюс</span></div></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ КАЛЬКУЛЯТОРЫ ═══ -->
-<div id="page-calc" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Инструменты</div><h2>Калькуляторы</h2></div></div>
-    <div class="calc-card">
-      <div class="calc-t">💰 Алименты</div><div class="calc-d">Расчёт суммы на основе дохода и детей</div>
-      <div class="cf"><label>Ежемесячный доход</label><div class="sl-row"><input type="range" id="sal" min="30000" max="500000" step="5000" value="100000" oninput="us(this,'salV',v=>v.toLocaleString('ru-RU')+' ₽');cAlim()"><span class="sl-val" id="salV">100 000 ₽</span></div></div>
-      <div class="cf"><label>Количество детей</label><select class="cs2" id="kids" onchange="cAlim()"><option value="0.25">1 ребёнок (25%)</option><option value="0.33">2 детей (33%)</option><option value="0.5">3+ детей (50%)</option></select></div>
-      <div class="cr-box"><div class="cr-lbl">Ежемесячные алименты</div><div class="cr-val" id="alR">25 000 ₽</div><div class="cr-sub">ст. 81 СК РФ · до вычета НДФЛ</div></div>
-    </div>
-    <div class="calc-card">
-      <div class="calc-t">🚗 Компенсация ДТП</div><div class="calc-d">Ущерб + моральный вред по ОСАГО</div>
-      <div class="cf"><label>Ущерб автомобилю</label><div class="sl-row"><input type="range" id="carD" min="0" max="1000000" step="10000" value="150000" oninput="us(this,'carDV',v=>v.toLocaleString('ru-RU')+' ₽');cDtp()"><span class="sl-val" id="carDV">150 000 ₽</span></div></div>
-      <div class="cf"><label>Медицинские расходы</label><div class="sl-row"><input type="range" id="medD" min="0" max="300000" step="5000" value="30000" oninput="us(this,'medDV',v=>v.toLocaleString('ru-RU')+' ₽');cDtp()"><span class="sl-val" id="medDV">30 000 ₽</span></div></div>
-      <div class="cf"><label>Вина другой стороны</label><select class="cs2" id="guilt" onchange="cDtp()"><option value="1">100% — полная вина</option><option value="0.75">75% — преимущественная</option><option value="0.5">50% — обоюдная</option></select></div>
-      <div class="cr-box"><div class="cr-lbl">Потенциальная компенсация</div><div class="cr-val" id="dtpR">210 000 ₽</div><div class="cr-sub">включая моральный вред 30 000 ₽</div></div>
-    </div>
-    <div class="calc-card">
-      <div class="calc-t">⚖️ Стоимость ведения дела</div><div class="calc-d">Ориентировочная стоимость юридических услуг</div>
-      <div class="cf"><label>Тип дела</label><select class="cs2" id="caseT" onchange="cCase()"><option value="family">Семейное (развод, алименты)</option><option value="civil">Гражданское (договоры, ущерб)</option><option value="criminal">Уголовное</option><option value="arbitration">Арбитражное</option></select></div>
-      <div class="cf"><label>Сумма иска</label><div class="sl-row"><input type="range" id="claimA" min="50000" max="5000000" step="50000" value="500000" oninput="us(this,'claimAV',v=>(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K')+' ₽');cCase()"><span class="sl-val" id="claimAV">500K ₽</span></div></div>
-      <div class="cr-box"><div class="cr-lbl">Стоимость ведения</div><div class="cr-val" id="caseR">50 000 ₽</div><div class="cr-sub" id="caseRs">включая досудебное урегулирование</div></div>
-    </div>
-    <div class="calc-card">
-      <div class="calc-t">📅 Срок исковой давности</div><div class="calc-d">Есть ли ещё время для подачи иска</div>
-      <div class="cf"><label>Дата нарушения</label><input class="ci2" type="date" id="vDate" onchange="cDead()"></div>
-      <div class="cf"><label>Тип нарушения</label><select class="cs2" id="vType" onchange="cDead()"><option value="3">Общий срок (3 года)</option><option value="1">Трудовые споры (1 год)</option><option value="1">Защита потребителей (1 год)</option><option value="10">Ничтожные сделки (10 лет)</option></select></div>
-      <div class="cr-box"><div class="cr-lbl">Статус срока</div><div class="cr-val" id="deadR" style="font-size:18px">Введите дату</div><div class="cr-sub" id="deadRs">Укажите дату нарушения</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ CRM ═══ -->
-<div id="page-crm" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Аналитика</div><h2>Дашборд</h2></div><a onclick="showToast('🔄 Данные обновлены')">Обновить</a></div>
-    <div class="m-grid">
-      <div class="mbox"><div class="ml">Лидов / месяц</div><div class="mv" style="color:var(--accent2)">248</div><div class="mc up">↑ 32%</div><div class="mbars" id="mb1"></div></div>
-      <div class="mbox"><div class="ml">Оплат</div><div class="mv" style="color:var(--accent3)">67</div><div class="mc up">↑ 18%</div><div class="mbars" id="mb2"></div></div>
-      <div class="mbox"><div class="ml">Выручка</div><div class="mv" style="color:var(--accent2);font-size:18px">1.25M ₽</div><div class="mc up">↑ 24%</div><div class="mbars" id="mb3"></div></div>
-      <div class="mbox"><div class="ml">Конверсия</div><div class="mv" style="color:var(--accent4)">27%</div><div class="mc up">↑ 8 п.п.</div><div class="mbars" id="mb4"></div></div>
-    </div>
-    <div class="fn-box">
-      <h3>Воронка продаж</h3>
-      <div class="fn-s"><div class="fn-h"><span>Входящие обращения</span><span>248</span></div><div class="fb"><div class="ff" data-w="100" style="background:var(--accent)"></div></div></div>
-      <div class="fn-s"><div class="fn-h"><span>Квалифицированные лиды</span><span>142</span></div><div class="fb"><div class="ff" data-w="57" style="background:var(--accent2)"></div></div></div>
-      <div class="fn-s"><div class="fn-h"><span>Записались на консультацию</span><span>98</span></div><div class="fb"><div class="ff" data-w="39" style="background:var(--accent4)"></div></div></div>
-      <div class="fn-s" style="margin-bottom:0"><div class="fn-h"><span>Оплатили услуги</span><span>67</span></div><div class="fb"><div class="ff" data-w="27" style="background:var(--accent3)"></div></div></div>
-    </div>
-    <div class="sec-hdr"><h2>Топ вопросов</h2></div>
-    <div class="q-list" style="margin-bottom:12px">
-      <div class="q-it"><div class="qn" style="background:rgba(108,99,255,.2);color:var(--accent2)">1</div><div class="qt"><b>Развод и раздел имущества</b><span>68 запросов</span></div><div class="qp" style="color:var(--accent2)">27%</div></div>
-      <div class="q-it"><div class="qn" style="background:rgba(167,139,250,.2);color:var(--accent2)">2</div><div class="qt"><b>Трудовые споры, увольнение</b><span>52 запроса</span></div><div class="qp" style="color:var(--accent2)">21%</div></div>
-      <div class="q-it"><div class="qn" style="background:rgba(251,191,36,.15);color:var(--accent4)">3</div><div class="qt"><b>ДТП и страховые споры</b><span>41 запрос</span></div><div class="qp" style="color:var(--accent4)">17%</div></div>
-      <div class="q-it"><div class="qn" style="background:rgba(52,211,153,.12);color:var(--accent3)">4</div><div class="qt"><b>Долги и банкротство</b><span>38 запросов</span></div><div class="qp" style="color:var(--accent3)">15%</div></div>
-    </div>
-    <div class="sec-hdr"><h2>Последние лиды</h2></div>
-    <div class="lt-wrap">
-      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(248,113,113,.15);color:var(--red)">ИМ</div><div class="li"><div class="ln">Иванова М.С.</div><div class="lt">Развод, раздел квартиры</div></div><span class="sb shot">Горячий</span></div>
-      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(52,211,153,.12);color:var(--accent3)">ПА</div><div class="li"><div class="ln">Петров А.В.</div><div class="lt">ДТП, страховая отказала</div></div><span class="sb spaid">Оплачено</span></div>
-      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(251,191,36,.12);color:var(--accent4)">СТ</div><div class="li"><div class="ln">Сидорова Т.И.</div><div class="lt">Незаконное увольнение</div></div><span class="sb swarm">Тёплый</span></div>
-      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(52,211,153,.12);color:var(--accent3)">КД</div><div class="li"><div class="ln">Козлов Д.Р.</div><div class="lt">Долг по договору займа</div></div><span class="sb spaid">Оплачено</span></div>
-      <div class="l-row" onclick="openModal('lead')"><div class="lav" style="background:rgba(248,113,113,.15);color:var(--red)">НС</div><div class="li"><div class="ln">Николаев С.П.</div><div class="lt">Уголовное дело</div></div><span class="sb shot">Горячий</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ КОНТЕНТ ═══ -->
-<div id="page-content" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Контент-фабрика</div><h2>Автоконтент</h2></div></div>
-    <div class="ftabs">
-      <button class="ftab active" onclick="fc('all',this)">Все</button>
-      <button class="ftab" onclick="fc('article',this)">Статьи</button>
-      <button class="ftab" onclick="fc('post',this)">Посты</button>
-      <button class="ftab" onclick="fc('video',this)">Видео</button>
-    </div>
-    <div id="clist">
-      <div class="cc ct-it" data-t="article" onclick="openModal('content1')"><div class="ctl">📝 SEO-статья</div><div class="ctt">Как разделить имущество при разводе: пошаговая инструкция</div><div class="ctm">На основе 68 запросов · 7 200 символов</div><div class="cts"><div class="cst"><b>4 200</b> просмотров</div><div class="cst"><b>12</b> лидов</div><div class="cst"><b>3</b> оплаты</div></div></div>
-      <div class="cc ct-it" data-t="post" onclick="openModal('content1')"><div class="ctl">📱 Telegram-пост</div><div class="ctt">5 ошибок при ДТП, которые лишат вас компенсации</div><div class="ctm">На основе 41 запроса · 1 200 символов</div><div class="cts"><div class="cst"><b>8 100</b> просмотров</div><div class="cst"><b>24</b> лида</div><div class="cst"><b>7</b> оплат</div></div></div>
-      <div class="cc ct-it" data-t="video" onclick="openModal('content1')"><div class="ctl">🎬 YouTube Shorts</div><div class="ctt">Уволили незаконно? Что делать в первые 24 часа</div><div class="ctm">На основе 52 запросов · 60 сек</div><div class="cts"><div class="cst"><b>22 000</b> просмотров</div><div class="cst"><b>38</b> лидов</div><div class="cst"><b>9</b> оплат</div></div></div>
-      <div class="cc ct-it" data-t="article" onclick="openModal('content1')"><div class="ctl">📝 SEO-статья</div><div class="ctt">Банкротство физических лиц 2025: что изменилось</div><div class="ctm">На основе 38 запросов · 6 400 символов</div><div class="cts"><div class="cst"><b>3 100</b> просмотров</div><div class="cst"><b>8</b> лидов</div><div class="cst"><b>2</b> оплаты</div></div></div>
-      <div class="cc ct-it" data-t="post" onclick="openModal('content1')"><div class="ctl">📱 Reels / TikTok</div><div class="ctt">Срок исковой давности простыми словами за 30 сек</div><div class="ctm">На основе 29 запросов · 30 сек</div><div class="cts"><div class="cst"><b>15 600</b> просмотров</div><div class="cst"><b>19</b> лидов</div><div class="cst"><b>4</b> оплаты</div></div></div>
-    </div>
-    <div style="margin-top:12px"><button class="bp" style="width:100%" onclick="openModal('contentgen')">✨ Сгенерировать контент</button></div>
-  </div>
-</div>
-
-<!-- ═══ ТАРИФЫ ═══ -->
-<div id="page-tariffs" class="page">
-  <div class="sec">
-    <div class="sec-hdr" style="margin-bottom:14px"><div><div style="font-size:11px;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Цены</div><h2>Тарифы</h2></div></div>
-    <div class="tc"><div class="tn">Старт</div><div class="tp">30 000 <sub>₽/мес</sub></div><div class="tpr">для небольших практик</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Бот для Telegram</div><div class="tf"><span class="ck">✓</span> До 200 обращений/мес</div><div class="tf"><span class="ck">✓</span> Базовые калькуляторы</div><div class="tf"><span class="ck">✓</span> Передача лидов менеджеру</div><div class="tf"><span class="cx">✗</span> <span style="color:var(--text3)">Анализ документов</span></div><div class="tf"><span class="cx">✗</span> <span style="color:var(--text3)">CRM-аналитика</span></div></div><button class="btn-t o" onclick="openModal('contact')">Подключить</button></div>
-    <div class="tc feat"><div class="fb2">⭐ Популярный</div><div class="tn">Профи</div><div class="tp">80 000 <sub>₽/мес</sub></div><div class="tpr">для юридических компаний</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Всё из «Старт»</div><div class="tf"><span class="ck">✓</span> До 1 000 обращений/мес</div><div class="tf"><span class="ck">✓</span> Анализ документов</div><div class="tf"><span class="ck">✓</span> CRM-дашборд</div><div class="tf"><span class="ck">✓</span> Генерация документов</div><div class="tf"><span class="ck">✓</span> Прогноз выигрыша</div></div><button class="btn-t p" onclick="openModal('contact')">Подключить</button></div>
-    <div class="tc"><div class="tn">Бизнес</div><div class="tp">150 000 <sub>₽/мес</sub></div><div class="tpr">без ограничений</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Всё из «Профи»</div><div class="tf"><span class="ck">✓</span> Безлимит обращений</div><div class="tf"><span class="ck">✓</span> Контент-фабрика</div><div class="tf"><span class="ck">✓</span> Парсер судебных дел</div><div class="tf"><span class="ck">✓</span> Личный кабинет клиента</div><div class="tf"><span class="ck">✓</span> API-интеграция</div></div><button class="btn-t o" onclick="openModal('contact')">Подключить</button></div>
-    <div class="tc" style="background:linear-gradient(135deg,rgba(30,30,40,.9),rgba(22,22,30,.9));border-color:rgba(255,255,255,.1)"><div class="tn" style="color:rgba(255,255,255,.4)">White Label</div><div class="tp">от 200 000 <sub>₽</sub></div><div class="tpr" style="color:rgba(255,255,255,.4)">за запуск + поддержка</div><div class="tfs"><div class="tf"><span class="ck">✓</span> Ваш бренд и домен</div><div class="tf"><span class="ck">✓</span> Вся экосистема</div><div class="tf"><span class="ck">✓</span> Обучение под вашу практику</div><div class="tf"><span class="ck">✓</span> Исходный код опционально</div></div><button class="btn-t o" onclick="openModal('contact')">Обсудить</button></div>
-  </div>
-</div>
-
-</div><!-- /scroll-area -->
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-it active" onclick="sp('home',this)"><span class="ni">🏠</span><span class="nl">Обзор</span></button>
-  <button class="nav-it" onclick="sp('bot',this)"><span class="ni">🤖</span><span class="nl">Бот</span></button>
-  <button class="nav-it" onclick="sp('analysis',this)"><span class="ni">📋</span><span class="nl">Анализ</span></button>
-  <button class="nav-it" onclick="sp('calc',this)"><span class="ni">🧮</span><span class="nl">Расчёты</span></button>
-  <button class="nav-it" onclick="sp('crm',this)"><span class="ni">📊</span><span class="nl">CRM</span></button>
-  <button class="nav-it" onclick="sp('content',this)"><span class="ni">✍️</span><span class="nl">Контент</span></button>
-  <button class="nav-it" onclick="sp('tariffs',this)"><span class="ni">💎</span><span class="nl">Тарифы</span></button>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VIZION</div>
+  <ul class="nav-links">
+    <li><a href="#hero">Главная</a></li>
+    <li><a href="#problem">Боли рынка</a></li>
+    <li><a href="#products">Продукты</a></li>
+    <li><a href="#conversion">Конверсия</a></li>
+    <li><a href="#market">Рынок</a></li>
+    <li><a href="#pnl">P&L</a></li>
+    <li><a href="#pricing">Цены</a></li>
+    <li><a href="#sales">Продажи</a></li>
+  </ul>
 </nav>
 
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-contact">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">👋</div><h3>Подключить сервис</h3><p>Специалист свяжется в течение 2 часов</p>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><input class="ci2" type="text" placeholder="Ваше имя"><input class="ci2" type="tel" placeholder="Телефон или Telegram"><select class="cs2"><option>Выберите тариф...</option><option>Старт — 30 000 ₽/мес</option><option>Профи — 80 000 ₽/мес</option><option>Бизнес — 150 000 ₽/мес</option><option>White Label</option></select></div>
-  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('contact')">Отправить заявку</button><button class="bs" style="width:100%" onclick="closeModal('contact')">Закрыть</button></div>
-</div>
-<div class="modal-overlay" id="modal-consult">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">⚖️</div><h3>Записаться на консультацию</h3><p>Подберём специалиста по вашему делу на основе анализа</p>
-  <div style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:var(--rs);padding:12px;margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:var(--accent3);margin-bottom:3px">✓ Дело проанализировано</div><div style="font-size:12px;color:var(--text2)">Вероятность выигрыша 65% · Срок подачи 14 дней</div></div>
-  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('consult')">Выбрать время</button><button class="bs" style="width:100%" onclick="closeModal('consult')">Позже</button></div>
-</div>
-<div class="modal-overlay" id="modal-docgen">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">📄</div><h3>Автогенерация документа</h3><p>Создадим на основе данных анализа</p>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"><button class="copt" onclick="sub('docgen')">📋 Исковое заявление · 2 900 ₽</button><button class="copt" onclick="sub('docgen')">📝 Претензия · бесплатно</button><button class="copt" onclick="sub('docgen')">📜 Жалоба в прокуратуру · 1 900 ₽</button><button class="copt" onclick="sub('docgen')">🤝 Договор · 3 500 ₽</button></div>
-  <button class="bs" style="width:100%" onclick="closeModal('docgen')">Закрыть</button></div>
-</div>
-<div class="modal-overlay" id="modal-content1">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">✨</div><h3>Контент готов</h3><p>Создан на основе реальных вопросов ваших клиентов</p>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"><button class="copt" onclick="showToast('📋 Скопировано');closeModal('content1')">📋 Скопировать текст</button><button class="copt" onclick="showToast('📱 Опубликовано в Telegram');closeModal('content1')">📱 Опубликовать в Telegram</button><button class="copt" onclick="showToast('📅 Запланировано');closeModal('content1')">📅 Запланировать</button></div>
-  <button class="bs" style="width:100%" onclick="closeModal('content1')">Закрыть</button></div>
-</div>
-<div class="modal-overlay" id="modal-contentgen">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">🤖</div><h3>Генерация контента</h3><p>Проанализируем вопросы клиентов за 30 дней</p>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><select class="cs2"><option>Статья для сайта (SEO)</option><option>Пост для Telegram</option><option>Сценарий Reels/Shorts</option></select><select class="cs2"><option>Топ-вопросы за 30 дней</option><option>Конкретная тема</option></select></div>
-  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('contentgen')">✨ Сгенерировать</button><button class="bs" style="width:100%" onclick="closeModal('contentgen')">Отмена</button></div>
-</div>
-<div class="modal-overlay" id="modal-predictor">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">🔮</div><h3>Предсказание исхода</h3><p>Модуль в разработке. Будет сравнивать ваш кейс с 50 000+ судебных решений и давать прогноз в %.</p>
-  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('predictor')">Уведомить о запуске</button><button class="bs" style="width:100%" onclick="closeModal('predictor')">Закрыть</button></div>
-</div>
-<div class="modal-overlay" id="modal-lead">
-  <div class="msheet"><div class="mhandle"></div><div style="font-size:28px;margin-bottom:12px">👤</div><h3>Карточка лида</h3>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:14px;margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:var(--text2)">Клиент</span><b style="font-size:13px">Иванова М.С.</b></div>
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:var(--text2)">Тема</span><b style="font-size:13px">Развод, раздел квартиры</b></div>
-    <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text2)">Статус</span><span class="sb shot">Горячий</span></div>
-  </div>
-  <button class="bp" style="width:100%;margin-bottom:10px" onclick="sub('lead')">Связаться с клиентом</button><button class="bs" style="width:100%" onclick="closeModal('lead')">Закрыть</button></div>
-</div>
+<a class="float-badge" href="#pricing">💰 Цены →</a>
 
-<div class="toast" id="toast">✓ <span id="tmsg"></span></div>
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+  <div class="aurora aurora-3"></div>
+  <div class="grid-pattern"></div>
+
+  <div style="position:relative;z-index:1;text-align:center;">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Умный сервис визуализации
+    </div>
+
+    <div class="hero-title">
+      <span class="line1">ПРОДАЙ ЕМУ</span>
+      <span class="line2">ЕГО МЕЧТУ</span>
+    </div>
+
+    <p class="hero-sub">
+      Клиент фотографирует комнату → выбирает стиль → получает готовый ремонт. 
+      Производитель загружает каталог → покупатель «примеряет» материал или мебель прямо на свой интерьер.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Готовых продукта</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">350К</div>
+        <div class="stat-label">Руб. уже продано</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">×4.2</div>
+        <div class="stat-label">Рост конверсии</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Конкурентов в РФ</div>
+      </div>
+    </div>
+
+    <button class="hero-cta" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">
+      Смотреть презентацию →
+    </button>
+  </div>
+</section>
+
+<!-- ===== PROBLEM ===== -->
+<section id="problem">
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Проблема рынка</span>
+    <h2 class="section-title reveal">БОЛИ, <br>НА КОТОРЫЕ<br>МЫ ДАВИМ</h2>
+    <p class="section-sub reveal">Каждый производитель строительных материалов, мебели или дизайн-студия сталкивается с одними и теми же барьерами.</p>
+
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <span class="pain-icon">😤</span>
+        <div class="pain-title">Клиент не представляет результат</div>
+        <div class="pain-text">«Покажите мне как это будет выглядеть у меня» — и дизайнер тратит 3–5 дней на визуализацию. 70% клиентов отваливаются до покупки.</div>
+        <div class="pain-num">70%</div>
+      </div>
+      <div class="pain-card reveal" style="animation-delay:0.1s;">
+        <span class="pain-icon">💸</span>
+        <div class="pain-title">Дорогие дизайнеры и рендеры</div>
+        <div class="pain-text">Одна профессиональная визуализация — от 5 000 до 30 000 руб. При этом клиент всё равно может передумать. ROI нулевой до сделки.</div>
+        <div class="pain-num">30К</div>
+      </div>
+      <div class="pain-card reveal" style="animation-delay:0.2s;">
+        <span class="pain-icon">⏳</span>
+        <div class="pain-title">Долгий цикл сделки</div>
+        <div class="pain-text">От первого касания до заключения договора — 2–6 недель. Пока думают — идут к конкурентам. Нет инструмента «зацепить здесь и сейчас».</div>
+        <div class="pain-num">6 нед</div>
+      </div>
+      <div class="pain-card reveal" style="animation-delay:0.3s;">
+        <span class="pain-icon">📞</span>
+        <div class="pain-title">Слабый отдел продаж</div>
+        <div class="pain-text">Менеджер не успевает обрабатывать входящие. Лиды остывают. Ответы на стандартные вопросы съедают 60% рабочего времени.</div>
+        <div class="pain-num">60%</div>
+      </div>
+      <div class="pain-card reveal" style="animation-delay:0.4s;">
+        <span class="pain-icon">🛒</span>
+        <div class="pain-title">Каталог «не работает»</div>
+        <div class="pain-text">Красивые фото материалов в каталоге ничего не продают. Клиент не может спроецировать плитку из шоурума на собственную кухню.</div>
+        <div class="pain-num">-82%</div>
+      </div>
+      <div class="pain-card reveal" style="animation-delay:0.5s;">
+        <span class="pain-icon">🔀</span>
+        <div class="pain-title">Нет дифференциации</div>
+        <div class="pain-text">Все продают одинаково: прайс + фото + звонок. Нет уникального инструмента, который бы выделял компанию на фоне конкурентов.</div>
+        <div class="pain-num">0</div>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="padding:36px;border-radius:24px;text-align:center;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:12px;background:linear-gradient(135deg,var(--accent1),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+        РЕШЕНИЕ — ДАТЬ КЛИЕНТУ ПЕРЕЖИТЬ РЕЗУЛЬТАТ ДО ПОКУПКИ
+      </div>
+      <p style="font-size:16px;color:var(--muted);max-width:680px;margin:0 auto;line-height:1.7;">
+        Когда человек видит, как его конкретная комната выглядит с новой плиткой, мебелью или после ремонта — эмоция совершает покупку. Наш сервис создаёт эту эмоцию за 30 секунд.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCTS ===== -->
+<section id="products">
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Продуктовая линейка</span>
+    <h2 class="section-title reveal">ТРИ ГОТОВЫХ<br>ПРОДУКТА</h2>
+    <p class="section-sub reveal">Каждый продукт — самостоятельный SaaS для конкретного сегмента рынка.</p>
+
+    <div class="product-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('design')">🏠 Дизайн интерьера</button>
+      <button class="tab-btn" onclick="switchTab('material')">🧱 Примерка материалов</button>
+      <button class="tab-btn" onclick="switchTab('furniture')">🛋 Мебель в интерьере</button>
+    </div>
+
+    <!-- TAB 1 -->
+    <div class="tab-content active" id="tab-design">
+      <div class="product-showcase">
+        <div class="product-mockup">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-header">🏠 Визуализатор</div>
+              <div class="phone-room-img">📸</div>
+              <div style="font-size:8px;color:#888;margin:4px 0;">Выберите стиль:</div>
+              <div class="phone-btn-row">
+                <span class="phone-btn">Скандинав</span>
+                <span class="phone-btn">Минимализм</span>
+                <span class="phone-btn">Лофт</span>
+                <span class="phone-btn">Классика</span>
+              </div>
+              <div class="phone-result">✨ Готово! Смотрите результат</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;font-size:13px;color:var(--muted);text-align:center;">
+            Telegram Bot или веб-сервис
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-name">ДИЗАЙН<br>ИНТЕРЬЕРА</div>
+          <div class="product-sold">✅ ПРОДАН ЗА 150 000 РУБ.</div>
+          <p class="product-desc">
+            Клиент фотографирует комнату через Telegram-бот или сайт, нажимает несколько кнопок с предпочтениями (стиль, цвет, бюджет) — и получает фотореалистичную визуализацию готового ремонта. Никаких дизайнеров. Результат — за 30 секунд.
+          </p>
+          <div class="feature-list">
+            <div class="feature-item"><span class="icon icon-purple">📸</span><span>Загрузка фото комнаты через Telegram или браузер</span></div>
+            <div class="feature-item"><span class="icon icon-green">🎨</span><span>Выбор стиля, цветовой палитры, бюджета</span></div>
+            <div class="feature-item"><span class="icon icon-pink">⚡</span><span>Генерация фотореалистичного результата за 30 сек</span></div>
+            <div class="feature-item"><span class="icon icon-gold">🤖</span><span>Встроенный бот квалифицирует лида и переводит на менеджера</span></div>
+            <div class="feature-item"><span class="icon icon-purple">📊</span><span>CRM-дашборд: все обращения в одном месте</span></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+            <span class="neon-badge neon-green">Дизайн-студии</span>
+            <span class="neon-badge neon-purple">Застройщики</span>
+            <span class="neon-badge neon-pink">Строй-компании</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2 -->
+    <div class="tab-content" id="tab-material">
+      <div class="product-showcase">
+        <div class="product-mockup">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-header">🧱 Примерка</div>
+              <div class="phone-room-img">🏠</div>
+              <div style="font-size:8px;color:#888;margin:4px 0;">Каталог материалов:</div>
+              <div class="phone-btn-row">
+                <span class="phone-btn">Плитка #1</span>
+                <span class="phone-btn">Плитка #2</span>
+                <span class="phone-btn">Паркет</span>
+              </div>
+              <div class="phone-result" style="background:linear-gradient(135deg,rgba(240,100,200,0.2),rgba(124,106,247,0.2));color:var(--accent2);border-color:rgba(240,100,200,0.3);">
+                🎯 Материал наложен!
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:20px;font-size:13px;color:var(--muted);text-align:center;">
+            Собственный каталог производителя
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-name">ПРИМЕРКА<br>МАТЕРИАЛОВ</div>
+          <div class="product-sold">✅ 2 ПРОДАЖИ ПО 100 000 РУБ.</div>
+          <p class="product-desc">
+            Производитель загружает каталог фасадных или интерьерных материалов (плитка, краска, обои, штукатурка). Клиент фотографирует свою стену/фасад и кликом «примеряет» любой материал из каталога прямо на своё фото. Конверсия в покупку растёт кратно.
+          </p>
+          <div class="feature-list">
+            <div class="feature-item"><span class="icon icon-pink">📦</span><span>Загрузка всего каталога компании в систему</span></div>
+            <div class="feature-item"><span class="icon icon-purple">🔮</span><span>Наложение материала на фото клиента с учётом текстуры и освещения</span></div>
+            <div class="feature-item"><span class="icon icon-green">📐</span><span>Работает для фасадов и интерьеров</span></div>
+            <div class="feature-item"><span class="icon icon-gold">💬</span><span>Бот отвечает на вопросы по материалу и помогает оформить заказ</span></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+            <span class="neon-badge neon-pink">Плитка/керамика</span>
+            <span class="neon-badge neon-green">Фасадные материалы</span>
+            <span class="neon-badge neon-purple">Краски и покрытия</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3 -->
+    <div class="tab-content" id="tab-furniture">
+      <div class="product-showcase">
+        <div class="product-mockup" style="background:linear-gradient(135deg,rgba(64,217,168,0.1),rgba(124,106,247,0.1));">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-header">🛋 Мебель</div>
+              <div class="phone-room-img">🏠</div>
+              <div style="font-size:8px;color:#888;margin:4px 0;">Каталог мебели:</div>
+              <div class="phone-btn-row">
+                <span class="phone-btn" style="background:rgba(64,217,168,0.2);color:#40d9a8;border-color:rgba(64,217,168,0.3);">Диван</span>
+                <span class="phone-btn" style="background:rgba(64,217,168,0.2);color:#40d9a8;border-color:rgba(64,217,168,0.3);">Стол</span>
+                <span class="phone-btn" style="background:rgba(64,217,168,0.2);color:#40d9a8;border-color:rgba(64,217,168,0.3);">Шкаф</span>
+              </div>
+              <div class="phone-result" style="background:linear-gradient(135deg,rgba(64,217,168,0.2),rgba(64,217,168,0.1));color:var(--accent3);border-color:rgba(64,217,168,0.3);">
+                🛋 Расставлено идеально!
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:20px;font-size:13px;color:var(--muted);text-align:center;">
+            Ищем первого клиента!</div>
+          </div>
+        <div class="product-details">
+          <div class="product-name">МЕБЕЛЬ<br>В ИНТЕРЬЕРЕ</div>
+          <div class="product-sold" style="background:rgba(184,255,110,0.1);border-color:rgba(184,255,110,0.3);color:var(--neon);">🚀 В ПОИСКЕ ПЕРВОГО КЛИЕНТА</div>
+          <p class="product-desc">
+            Производитель или продавец мебели загружает свой каталог. Клиент фотографирует свою комнату, выбирает понравившуюся мебель — и видит, как она будет стоять именно в его пространстве с правильными пропорциями. Это убивает самое главное возражение: «А вдруг не подойдёт?»
+          </p>
+          <div class="feature-list">
+            <div class="feature-item"><span class="icon icon-green">📐</span><span>Точное вписывание мебели с учётом перспективы и масштаба</span></div>
+            <div class="feature-item"><span class="icon icon-purple">🎨</span><span>Выбор цвета и обивки из доступных вариантов</span></div>
+            <div class="feature-item"><span class="icon icon-pink">🛒</span><span>Прямая кнопка «Купить» после просмотра</span></div>
+            <div class="feature-item"><span class="icon icon-gold">📈</span><span>Аналитика: какую мебель «примеряют» чаще всего</span></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;">
+            <span class="neon-badge neon-green">Мебельные фабрики</span>
+            <span class="neon-badge neon-purple">Интернет-магазины</span>
+            <span class="neon-badge neon-pink">Шоурумы</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONVERSION ===== -->
+<section id="conversion">
+  <div class="aurora" style="width:600px;height:600px;background:radial-gradient(circle,rgba(64,217,168,0.15) 0%,transparent 70%);bottom:-100px;right:-100px;"></div>
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Влияние на бизнес</span>
+    <h2 class="section-title reveal">КАК РАСТЁТ<br>КОНВЕРСИЯ</h2>
+    <p class="section-sub reveal">Четыре механики, каждая из которых самостоятельно увеличивает конверсию. В связке — эффект кратный.</p>
+
+    <div class="conv-grid">
+      <div class="funnel-vis reveal">
+        <div class="funnel-title">Воронка продаж — сравнение</div>
+
+        <div style="display:flex;gap:20px;font-size:12px;margin-bottom:20px;color:var(--muted);">
+          <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:3px;background:rgba(255,80,80,0.5);display:inline-block;"></span>Без сервиса</span>
+          <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:3px;background:var(--accent3);display:inline-block;"></span>С сервисом</span>
+        </div>
+
+        <div class="funnel-stage">
+          <div class="funnel-label">
+            <span>Посетители</span>
+            <span>100%</span>
+          </div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:100%;background:linear-gradient(90deg,rgba(255,80,80,0.5),rgba(255,80,80,0.3));">100%</div>
+          </div>
+        </div>
+
+        <div class="funnel-stage">
+          <div class="funnel-label">
+            <span>Вовлечённые (используют сервис)</span>
+            <span style="color:var(--accent3);">+180%</span>
+          </div>
+          <div class="funnel-bar-wrap" style="height:auto;display:flex;gap:4px;flex-direction:column;">
+            <div class="funnel-bar" style="width:22%;background:linear-gradient(90deg,rgba(255,80,80,0.5),rgba(255,80,80,0.3));height:28px;">22% без</div>
+            <div class="funnel-bar" style="width:61%;background:linear-gradient(90deg,var(--accent3),rgba(64,217,168,0.4));height:28px;">61% с сервисом</div>
+          </div>
+        </div>
+
+        <div class="funnel-stage" style="margin-top:10px;">
+          <div class="funnel-label">
+            <span>Лиды (запросили звонок)</span>
+            <span style="color:var(--accent3);">+220%</span>
+          </div>
+          <div class="funnel-bar-wrap" style="height:auto;display:flex;gap:4px;flex-direction:column;">
+            <div class="funnel-bar" style="width:8%;background:linear-gradient(90deg,rgba(255,80,80,0.5),rgba(255,80,80,0.3));height:28px;">8%</div>
+            <div class="funnel-bar" style="width:26%;background:linear-gradient(90deg,var(--accent3),rgba(64,217,168,0.4));height:28px;">26%</div>
+          </div>
+        </div>
+
+        <div class="funnel-stage" style="margin-top:10px;">
+          <div class="funnel-label">
+            <span>Покупатели</span>
+            <span style="color:var(--gold);">+320%</span>
+          </div>
+          <div class="funnel-bar-wrap" style="height:auto;display:flex;gap:4px;flex-direction:column;">
+            <div class="funnel-bar" style="width:3%;background:linear-gradient(90deg,rgba(255,80,80,0.5),rgba(255,80,80,0.3));height:28px;">3%</div>
+            <div class="funnel-bar" style="width:12%;background:linear-gradient(90deg,var(--gold),rgba(232,201,122,0.4));height:28px;">12%</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:rgba(64,217,168,0.08);border:1px solid rgba(64,217,168,0.2);border-radius:12px;font-size:13px;color:var(--accent3);font-weight:700;text-align:center;">
+          Итоговый рост конверсии: ×4.2 — ×4.8
+        </div>
+      </div>
+
+      <div class="conv-metrics">
+        <div class="metric-card mc-purple reveal">
+          <div class="metric-label">Геймификация</div>
+          <div class="metric-value">
+            <span style="color:var(--accent1);">+85%</span>
+            <span class="metric-unit">вовлечённость</span>
+            <span class="metric-delta delta-up">↑ 3.2×</span>
+          </div>
+          <div class="metric-desc">Пользователь «играет» с вариантами, создаёт 3–7 визуализаций за сессию. Время на сайте растёт в 3 раза. Более вовлечённый лид = более горячий.</div>
+        </div>
+
+        <div class="metric-card mc-green reveal" style="animation-delay:0.1s;">
+          <div class="metric-label">Примерка материала / мебели</div>
+          <div class="metric-value">
+            <span style="color:var(--accent3);">+67%</span>
+            <span class="metric-unit">конверсия</span>
+            <span class="metric-delta delta-up">↑ 2.8×</span>
+          </div>
+          <div class="metric-desc">Устраняет главное возражение «А вдруг не подойдёт?». По данным западных аналогов: виртуальная примерка снижает возвраты на 22% и повышает средний чек.</div>
+        </div>
+
+        <div class="metric-card mc-pink reveal" style="animation-delay:0.2s;">
+          <div class="metric-label">Ответы здесь и сейчас</div>
+          <div class="metric-value">
+            <span style="color:var(--accent2);">+54%</span>
+            <span class="metric-unit">лиды</span>
+            <span class="metric-delta delta-up">↑ 2.4×</span>
+          </div>
+          <div class="metric-desc">Бот, обученный на материалах компании, закрывает 80% вопросов мгновенно. Никакого ожидания. Горячий лид не уходит думать к конкурентам.</div>
+        </div>
+
+        <div class="metric-card mc-gold reveal" style="animation-delay:0.3s;">
+          <div class="metric-label">Квалификация + передача менеджеру</div>
+          <div class="metric-value">
+            <span style="color:var(--gold);">×2.1</span>
+            <span class="metric-unit">эффект</span>
+            <span class="metric-delta delta-up">↑ ROI</span>
+          </div>
+          <div class="metric-desc">Менеджер получает уже тёплого клиента с его пожеланиями и визуализациями. Цикл сделки сокращается с 4–6 недель до 3–7 дней.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARKET ===== -->
+<section id="market">
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Анализ рынка</span>
+    <h2 class="section-title reveal">МЫ ПРОТИВ<br>ЗАРУБЕЖНЫХ<br>ИГРОКОВ</h2>
+    <p class="section-sub reveal">Западный рынок уже оценён в $1.47 млрд и растёт на 21% в год. В России — пустота. Мы первые.</p>
+
+    <div class="market-grid">
+      <div class="market-card reveal">
+        <div class="market-num">$6.96B</div>
+        <div class="market-label">Объём мирового рынка<br>AI-визуализации к 2032 г</div>
+      </div>
+      <div class="market-card reveal" style="animation-delay:0.1s;">
+        <div class="market-num">21.5%</div>
+        <div class="market-label">CAGR — ежегодный рост<br>рынка 2025–2032</div>
+      </div>
+      <div class="market-card reveal" style="animation-delay:0.2s;">
+        <div class="market-num">0</div>
+        <div class="market-label">Русскоязычных<br>полноценных аналогов</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="overflow-x:auto;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Решение</th>
+            <th>Страна</th>
+            <th>Цена</th>
+            <th>Каталог<br>клиента</th>
+            <th>Telegram</th>
+            <th>Продажа<br>лицензии</th>
+            <th>Бот-продавец</th>
+            <th class="highlight">VIZION 🇷🇺</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RoomGPT</td>
+            <td>🇺🇸 США</td>
+            <td>$19/мес</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td class="highlight" rowspan="6" style="vertical-align:middle;text-align:center;">
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                <span class="check" style="font-size:20px;">✓</span>
+                <span class="check" style="font-size:20px;">✓</span>
+                <span class="check" style="font-size:20px;">✓</span>
+                <span class="check" style="font-size:20px;">✓</span>
+                <div style="font-size:12px;color:var(--accent1);font-weight:700;margin-top:8px;">Всё включено<br>от 100К руб.</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>HomeDesigns AI</td>
+            <td>🇺🇸 США</td>
+            <td>$27–29/мес</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Collov AI</td>
+            <td>🇺🇸 США</td>
+            <td>$29+/мес</td>
+            <td><span class="partial">~ частично</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>ArchiVinci</td>
+            <td>🇺🇸 США</td>
+            <td>$20–25/мес</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Hover (Instant Design)</td>
+            <td>🇺🇸 США</td>
+            <td>Корп. тарифы</td>
+            <td><span class="partial">~ только фасады</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td>Российские аналоги</td>
+            <td>🇷🇺 РФ</td>
+            <td>—</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glass reveal" style="margin-top:32px;padding:32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;text-align:center;">
+      <div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:8px;">Западные SaaS</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--muted);">$19–29/мес</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;">Без каталога, без TG, без продаж</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:28px;">→</div>
+      <div>
+        <div style="font-size:14px;color:var(--accent3);margin-bottom:8px;">VIZION (наш)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">100–300К руб.</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;">Белая этикетка + каталог + бот-продавец</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== P&L CALCULATOR ===== -->
+<section id="pnl">
+  <div class="aurora" style="width:500px;height:500px;background:radial-gradient(circle,var(--glow1) 0%,transparent 70%);top:-100px;left:-100px;"></div>
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Финансовая модель</span>
+    <h2 class="section-title reveal">P&L<br>КАЛЬКУЛЯТОР</h2>
+    <p class="section-sub reveal">Реальные цифры бизнеса. Крутите ползунки — смотрите результат.</p>
+
+    <div class="calc-wrapper">
+      <div class="calc-card reveal">
+        <div class="calc-title">
+          <div class="calc-icon" style="background:rgba(124,106,247,0.2);">📊</div>
+          Настройки бизнеса
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>Продаж в месяц</span>
+            <span class="slider-val" id="val-sales">3</span>
+          </div>
+          <input type="range" min="1" max="20" value="3" id="s-sales" oninput="calcPnl()">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>Средний чек (₽)</span>
+            <span class="slider-val" id="val-price">150 000</span>
+          </div>
+          <input type="range" min="50000" max="500000" step="10000" value="150000" id="s-price" oninput="calcPnl()">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>Подписок (доп. 8К/мес)</span>
+            <span class="slider-val" id="val-subs">5</span>
+          </div>
+          <input type="range" min="0" max="50" value="5" id="s-subs" oninput="calcPnl()">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>Себестоимость (разработка/API %)</span>
+            <span class="slider-val" id="val-cost">18</span>%
+          </div>
+          <input type="range" min="10" max="40" value="18" id="s-cost" oninput="calcPnl()">
+        </div>
+
+        <div class="pnl-result">
+          <div class="pnl-row">
+            <span class="label">💰 Выручка с продаж лицензий</span>
+            <span class="value" id="r-sales-rev" style="color:var(--accent3);">450 000 ₽</span>
+          </div>
+          <div class="pnl-row">
+            <span class="label">📦 Выручка с подписок</span>
+            <span class="value" id="r-subs-rev" style="color:var(--accent1);">40 000 ₽</span>
+          </div>
+          <div class="pnl-row">
+            <span class="label">📉 Операционные расходы</span>
+            <span class="value" id="r-costs" style="color:rgba(255,80,80,0.8);">88 200 ₽</span>
+          </div>
+          <div class="pnl-row total">
+            <span class="label">🚀 Чистая прибыль в месяц</span>
+            <span class="value" id="r-profit">401 800 ₽</span>
+          </div>
+          <div class="pnl-row">
+            <span class="label">📈 Маржа</span>
+            <span class="value" id="r-margin" style="color:var(--gold);">81.8%</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="chart-container reveal" style="margin-bottom:20px;">
+          <div class="chart-title">📊 Рост прибыли по месяцам (план-сценарий)</div>
+          <div class="bar-chart" id="growth-chart"></div>
+          <div style="display:flex;gap:16px;font-size:12px;color:var(--muted);">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:4px;border-radius:2px;background:var(--accent1);display:inline-block;"></span>Выручка</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:4px;border-radius:2px;background:rgba(255,80,80,0.5);display:inline-block;"></span>Расходы</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:4px;border-radius:2px;background:var(--accent3);display:inline-block;"></span>Прибыль</span>
+          </div>
+        </div>
+
+        <div class="glass reveal" style="padding:28px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:20px;">💡 Сценарии бизнеса</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);cursor:pointer;" onclick="setScenario(1,150000,3,18)">
+              <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px;">🌱 СТАРТ (сейчас)</div>
+              <div style="font-size:13px;color:var(--muted);">2–3 продажи/мес × 150К + 5 подписок</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent1);">~380К ₽/мес</div>
+            </div>
+            <div style="padding:16px;background:rgba(124,106,247,0.06);border-radius:12px;border:1px solid rgba(124,106,247,0.2);cursor:pointer;" onclick="setScenario(6,200000,15,15)">
+              <div style="font-size:13px;font-weight:700;color:var(--accent1);margin-bottom:4px;">📈 РОСТ (через 6 мес)</div>
+              <div style="font-size:13px;color:var(--muted);">6 продаж × 200К + 15 подписок + доп услуги</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent3);">~1.4М ₽/мес</div>
+            </div>
+            <div style="padding:16px;background:rgba(64,217,168,0.05);border-radius:12px;border:1px solid rgba(64,217,168,0.2);cursor:pointer;" onclick="setScenario(12,250000,40,12)">
+              <div style="font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:4px;">🚀 МАСШТАБ (1 год)</div>
+              <div style="font-size:13px;color:var(--muted);">12 продаж × 250К + 40 подписок + SaaS</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);">~3.7М ₽/мес</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section id="pricing">
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Ценообразование</span>
+    <h2 class="section-title reveal">СКОЛЬКО<br>ЭТО СТОИТ</h2>
+    <p class="section-sub reveal">Белая этикетка — клиент получает готовый сервис со своим брендом. Не "дорого", а "инвестиция с ROI ×5 за первый квартал".</p>
+
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-tier">Старт</div>
+        <div class="price-amount" style="background:linear-gradient(135deg,var(--accent3),#2dc87a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">100К</div>
+        <div class="price-period">рублей, разовая лицензия</div>
+        <ul class="price-features">
+          <li>Один продукт (материалы или мебель)</li>
+          <li>Загрузка каталога до 200 позиций</li>
+          <li>Telegram-бот или веб-виджет</li>
+          <li>Базовый бот-консультант</li>
+          <li>3 месяца поддержки</li>
+          <li>Брендинг клиента</li>
+        </ul>
+        <button class="price-btn">Обсудить</button>
+      </div>
+
+      <div class="price-card popular reveal" style="animation-delay:0.1s;">
+        <div class="price-tier">Профессионал</div>
+        <div class="price-amount" style="background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">200К</div>
+        <div class="price-period">рублей + 8К/мес подписка</div>
+        <ul class="price-features">
+          <li>Два продукта на выбор</li>
+          <li>Каталог без ограничений</li>
+          <li>Telegram + веб-версия</li>
+          <li>Умный бот-продавец (обучен на товарах)</li>
+          <li>CRM интеграция + аналитика</li>
+          <li>6 месяцев поддержки</li>
+          <li>Приоритетные обновления</li>
+        </ul>
+        <button class="price-btn primary">Это хит 🔥</button>
+      </div>
+
+      <div class="price-card reveal" style="animation-delay:0.2s;">
+        <div class="price-tier">Корпоратив</div>
+        <div class="price-amount" style="background:linear-gradient(135deg,var(--gold),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">300К+</div>
+        <div class="price-period">рублей + 15К/мес</div>
+        <ul class="price-features">
+          <li>Все три продукта</li>
+          <li>Интеграция с 1С/сайтом/ERP</li>
+          <li>Многопользовательский доступ</li>
+          <li>Персональный бот с голосом бренда</li>
+          <li>Обучение команды (2 дня)</li>
+          <li>12 месяцев сопровождения</li>
+          <li>Эксклюзив в регионе</li>
+        </ul>
+        <button class="price-btn">Обсудить</button>
+      </div>
+    </div>
+
+    <!-- ROI Calculator -->
+    <div class="glass reveal" style="padding:36px;margin-top:24px;">
+      <div style="font-size:20px;font-weight:700;margin-bottom:24px;text-align:center;">💰 Калькулятор окупаемости для клиента</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:24px;">
+        <div class="slider-row">
+          <div class="slider-label"><span>Посетителей сайта/мес</span><span class="slider-val" id="rv-visitors">500</span></div>
+          <input type="range" min="100" max="5000" step="100" value="500" id="roi-visitors" oninput="calcRoi()">
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Средний чек клиента (₽)</span><span class="slider-val" id="rv-check">80 000</span></div>
+          <input type="range" min="10000" max="500000" step="5000" value="80000" id="roi-check" oninput="calcRoi()">
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Конверсия до нас (%)</span><span class="slider-val" id="rv-conv">3</span>%</div>
+          <input type="range" min="1" max="15" value="3" id="roi-conv" oninput="calcRoi()">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:16px;border:1px solid var(--border);">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Выручка ДО</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(255,80,80,0.7);" id="roi-before">1.2М ₽</div>
+        </div>
+        <div style="padding:20px;background:rgba(64,217,168,0.05);border-radius:16px;border:1px solid rgba(64,217,168,0.2);">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Выручка ПОСЛЕ</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent3);" id="roi-after">5.0М ₽</div>
+        </div>
+        <div style="padding:20px;background:rgba(124,106,247,0.06);border-radius:16px;border:1px solid rgba(124,106,247,0.2);">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Прирост/мес</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent1);" id="roi-delta">+3.8М ₽</div>
+        </div>
+        <div style="padding:20px;background:rgba(232,201,122,0.05);border-radius:16px;border:1px solid rgba(232,201,122,0.2);">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Окупаемость</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);" id="roi-payback">2 нед</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SALES GUIDE ===== -->
+<section id="sales">
+  <div class="aurora" style="width:600px;height:600px;background:radial-gradient(circle,var(--glow2) 0%,transparent 70%);bottom:-100px;right:-200px;"></div>
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Гайд для продажника</span>
+    <h2 class="section-title reveal">КАК<br>ПРОДАВАТЬ</h2>
+    <p class="section-sub reveal">Ключевые боли, правильные вопросы и готовые скрипты. Сохрани — и вперёд.</p>
+
+    <div class="sales-grid">
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:20px;color:var(--text);">🎯 Давить на эти боли</div>
+
+        <div class="pain-trigger reveal" onclick="this.querySelector('.pain-a').style.display=this.querySelector('.pain-a').style.display==='none'?'block':'none'">
+          <div class="pain-q"><span class="emoji">😤</span><span>«Клиент не может представить как будет выглядеть результат»</span></div>
+          <div class="pain-a">Спроси: "Сколько раз за месяц клиент уходит думать и не возвращается?" → Показываешь: наш сервис даёт результат за 30 секунд, клиент влюбляется ещё до договора.</div>
+        </div>
+
+        <div class="pain-trigger reveal" style="animation-delay:0.05s;" onclick="this.querySelector('.pain-a').style.display=this.querySelector('.pain-a').style.display==='none'?'block':'none'">
+          <div class="pain-q"><span class="emoji">💸</span><span>«Мы тратим огромные деньги на дизайнеров и рендеры»</span></div>
+          <div class="pain-a">Считаем вместе: если 1 рендер = 5 000–15 000 руб × 30 клиентов в месяц = 150–450К. Наш сервис стоит разово 150К и окупается в первый месяц.</div>
+        </div>
+
+        <div class="pain-trigger reveal" style="animation-delay:0.1s;" onclick="this.querySelector('.pain-a').style.display=this.querySelector('.pain-a').style.display==='none'?'block':'none'">
+          <div class="pain-q"><span class="emoji">📞</span><span>«Менеджеры перегружены одинаковыми вопросами»</span></div>
+          <div class="pain-a">Бот закрывает 80% вопросов ("из чего это сделано?", "какие цвета есть?", "сколько стоит?") автоматически. Менеджер получает уже горячего лида с конкретным запросом.</div>
+        </div>
+
+        <div class="pain-trigger reveal" style="animation-delay:0.15s;" onclick="this.querySelector('.pain-a').style.display=this.querySelector('.pain-a').style.display==='none'?'block':'none'">
+          <div class="pain-q"><span class="emoji">🔀</span><span>«Все компании одинаковые, нет отличия от конкурентов»</span></div>
+          <div class="pain-a">Сервис становится WOW-фактором: "Мы единственные в Уфе/регионе, кто даёт примерить материал прямо на вашу стену". Это PR-повод, вирус, отличие.</div>
+        </div>
+
+        <div class="pain-trigger reveal" style="animation-delay:0.2s;" onclick="this.querySelector('.pain-a').style.display=this.querySelector('.pain-a').style.display==='none'?'block':'none'">
+          <div class="pain-q"><span class="emoji">🛒</span><span>«Каталог есть, но продажи с него слабые»</span></div>
+          <div class="pain-a">Каталог без «примерки» — это просто фото. С нашим сервисом каждая позиция каталога становится интерактивной. Среднее время сессии вырастает в 3 раза.</div>
+        </div>
+
+        <div style="margin-top:24px;padding:20px;background:rgba(232,201,122,0.07);border:1px solid rgba(232,201,122,0.2);border-radius:16px;" class="reveal">
+          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;">⚡ Топ-3 целевых сегмента</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted);">
+            <div>🏭 <strong style="color:var(--text);">Производители стройматериалов</strong> — плитка, керамогранит, штукатурка, краски. Чек 100–200К</div>
+            <div>🏗 <strong style="color:var(--text);">Строительные компании и застройщики</strong> — нужна визуализация для продажи квартир. Чек 150–300К</div>
+            <div>🛋 <strong style="color:var(--text);">Мебельные производители и шоурумы</strong> — огромный рынок, нет аналогов. Чек 150–250К</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="script-card reveal">
+          <div class="script-title">📋 Скрипт первого звонка</div>
+
+          <div class="script-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-label">Открытие (30 сек)</div>
+              <div class="step-text">«Добрый день, Иван. Я по теме, которая напрямую влияет на конверсию ваших продаж строительных материалов. У вас есть 2 минуты?»</div>
+            </div>
+          </div>
+
+          <div class="script-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-label">Боль (1 мин)</div>
+              <div class="step-text">«Скажите, бывает такое, что клиент приходит в шоурум, смотрит плитку, нравится — но говорит "не уверен, подойдёт ли это к нам"? И уходит думать... Насколько часто такое случается?»</div>
+            </div>
+          </div>
+
+          <div class="script-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-label">Решение (1 мин)</div>
+              <div class="step-text">«Мы сделали сервис, где клиент фотографирует свою комнату и буквально за 30 секунд видит, как ваша плитка будет выглядеть именно у него. Три наши клиента уже запустили это — один сообщил о росте продаж в 2.3 раза за первый месяц.»</div>
+            </div>
+          </div>
+
+          <div class="script-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-label">Демо (следующий шаг)</div>
+              <div class="step-text">«Я могу показать вам живое демо прямо сейчас — прямо в браузере, займёт 5 минут. Когда вам удобнее — сегодня после 15:00 или завтра утром?»</div>
+            </div>
+          </div>
+
+          <div class="script-step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="step-label">Закрытие возражения "дорого"</div>
+              <div class="step-text">«Давайте посчитаем вместе. Если у вас 200 посетителей в месяц и конверсия 3% — это 6 продаж. При нашем сервисе конверсия вырастет до 10–12% — это уже 20–24 продажи. При чеке 50К разница = 700–900К в месяц. Наш сервис стоит 150К разово.»</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass reveal" style="margin-top:20px;padding:24px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:16px;">🚫 Возражения и ответы</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+            <div style="padding:12px;background:rgba(255,80,80,0.05);border-radius:10px;border:1px solid rgba(255,80,80,0.15);">
+              <strong style="color:rgba(255,120,120,0.9);">«У нас уже есть сайт»</strong>
+              <div style="color:var(--muted);margin-top:4px;">«Сайт показывает товар. Мы показываем товар В ДОМЕ клиента. Это принципиально разные эмоции.»</div>
+            </div>
+            <div style="padding:12px;background:rgba(255,80,80,0.05);border-radius:10px;border:1px solid rgba(255,80,80,0.15);">
+              <strong style="color:rgba(255,120,120,0.9);">«Слишком дорого»</strong>
+              <div style="color:var(--muted);margin-top:4px;">«Одна дополнительная сделка в первый месяц — и сервис уже окупился. Хотите посчитаем прямо сейчас?»</div>
+            </div>
+            <div style="padding:12px;background:rgba(255,80,80,0.05);border-radius:10px;border:1px solid rgba(255,80,80,0.15);">
+              <strong style="color:rgba(255,120,120,0.9);">«Надо подумать»</strong>
+              <div style="color:var(--muted);margin-top:4px;">«Конечно. Пока вы думаете, давайте я сделаю вам демо с ВАШИМ каталогом — бесплатно, за 24 часа. Потрогаете руками.»</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ROADMAP ===== -->
+<section id="roadmap" style="padding-bottom:80px;">
+  <div class="grid-pattern"></div>
+  <div class="container" style="position:relative;z-index:1;">
+    <span class="section-tag reveal">Дорожная карта</span>
+    <h2 class="section-title reveal">КУДА<br>ДВИГАЕМСЯ</h2>
+    <p class="section-sub reveal">От текущих продаж к масштабируемому SaaS-бизнесу с пассивным доходом.</p>
+
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="tl-phase">СЕЙЧАС — Q2 2026</div>
+        <div class="tl-title">ПРОДАЖИ ЛИЦЕНЗИЙ</div>
+        <div class="tl-text">Три готовых продукта. Активно ищем клиентов в сегментах: стройматериалы, мебель, дизайн-студии. Цель — 5+ активных клиентов и выручка 700К+/месяц.</div>
+        <div class="tl-tags">
+          <span class="neon-badge neon-green">Текущий этап</span>
+          <span class="neon-badge neon-purple">350К продано</span>
+          <span class="neon-badge neon-pink">3 продукта</span>
+        </div>
+      </div>
+
+      <div class="timeline-item" style="animation-delay:0.1s;">
+        <div class="tl-phase">Q3 2026 — 6 месяцев</div>
+        <div class="tl-title">БОТ-ПРОДАВЕЦ + АНАЛИТИКА</div>
+        <div class="tl-text">Запуск умного бота, обученного на каталоге каждого клиента. Интеграция с CRM. Дашборд аналитики для клиента: конверсия, горячие позиции, активность. Цель — 15 клиентов + 120К/мес подписочная выручка.</div>
+        <div class="tl-tags">
+          <span class="neon-badge neon-purple">Бот-продавец</span>
+          <span class="neon-badge neon-green">CRM интеграция</span>
+          <span class="neon-badge neon-pink">Аналитика</span>
+        </div>
+      </div>
+
+      <div class="timeline-item" style="animation-delay:0.2s;">
+        <div class="tl-phase">Q4 2026 — 9 месяцев</div>
+        <div class="tl-title">SAAS-ПЛАТФОРМА</div>
+        <div class="tl-text">Личный кабинет. Клиент сам загружает каталог, настраивает бота, отслеживает метрики. Снижаем себестоимость продажи. Масштабируемость без роста команды. Цель — 30 клиентов + 2.5М/мес ARR.</div>
+        <div class="tl-tags">
+          <span class="neon-badge neon-gold" style="background:rgba(232,201,122,0.1);border-color:rgba(232,201,122,0.3);color:var(--gold);">Self-serve SaaS</span>
+          <span class="neon-badge neon-green">Масштаб без команды</span>
+        </div>
+      </div>
+
+      <div class="timeline-item" style="animation-delay:0.3s;">
+        <div class="tl-phase">2027 — ЭКСПАНСИЯ</div>
+        <div class="tl-title">MARKETPLACE + AR</div>
+        <div class="tl-text">Маркетплейс компаний с нашим сервисом. AR-примерка через камеру смартфона в реальном времени. Партнёрская программа. Выход на СНГ-рынки. Цель — 100+ клиентов, оценка бизнеса 50М+.</div>
+        <div class="tl-tags">
+          <span class="neon-badge neon-purple">AR Mode</span>
+          <span class="neon-badge neon-pink">Marketplace</span>
+          <span class="neon-badge neon-green">СНГ экспансия</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VIZION</div>
+  <p class="footer-tagline">Умная визуализация для строительного бизнеса России</p>
+  <div class="contact-grid">
+    <div class="contact-item">
+      <div class="contact-type">Telegram</div>
+      <div class="contact-val">@evgeny_viz</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-type">Статус</div>
+      <div class="contact-val" style="color:var(--accent3);">● Берём проекты</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-type">Продано</div>
+      <div class="contact-val" style="color:var(--gold);">350 000 ₽</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-type">Регион</div>
+      <div class="contact-val">Россия / СНГ</div>
+    </div>
+  </div>
+  <p style="margin-top:48px;font-size:12px;color:rgba(255,255,255,0.15);">© 2026 VIZION — Сервис визуализации интерьера и строительных материалов</p>
+</footer>
 
 <script>
-function sp(id, btn) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  else { const i=['home','bot','analysis','calc','crm','content','tariffs'].indexOf(id); if(i>=0) document.querySelectorAll('.nav-it')[i].classList.add('active'); }
-  document.getElementById('sa').scrollTop=0;
-  if(id==='crm') setTimeout(initCRM,100);
-  if(id==='analysis') resetAn();
+// PROGRESS BAR
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+// REVEAL ON SCROLL
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// TABS
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
 }
-function openModal(id){document.getElementById('modal-'+id).classList.add('open');}
-function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
-function sub(id){closeModal(id);showToast('✅ Заявка отправлена! Свяжемся в течение 2 часов');}
-function showToast(msg){const t=document.getElementById('toast');document.getElementById('tmsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
-function ff(cat,btn){document.querySelectorAll('.ftabs .ftab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.feat-it').forEach(c=>{c.style.display=(cat==='all'||c.dataset.c===cat)?'block':'none';});}
-function fc(t,btn){document.querySelectorAll('#page-content .ftabs .ftab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.ct-it').forEach(c=>{c.style.display=(t==='all'||c.dataset.t===t)?'block':'none';});}
-const scens={
-  divorce:{steps:[{bot:'Понял. При разводе с разделом имущества важна скорость. Есть совместная недвижимость?'},{user:'Да, квартира и машина',bot:'Серьёзно. Без правильного оформления один из супругов может лишиться доли. Есть дети?'},{user:'Двое детей',bot:'⚠️ С двумя детьми суд часто присуждает большую долю той стороне, с которой они остаются. Срок подачи — 3 года. Подключим специалиста? Консультация — 2 900 ₽.'}]},
-  dtp:{steps:[{bot:'ДТП требует быстрых действий. Вы потерпевшая сторона?'},{user:'Да, меня подрезали',bot:'Страховая уже ответила? В 40% случаев страховые занижают выплаты или отказывают.'},{user:'Предложили мало',bot:'🚨 Типичное занижение. Реальная компенсация в среднем в 2.3× выше предложения страховой. Срок обжалования — 6 мес. Подключить юриста по страховым спорам?'}]},
-  debt:{steps:[{bot:'Вы должник или вам должны?'},{user:'Мне должны по договору',bot:'Сумма и как давно нарушены обязательства?'},{user:'500 тысяч, год назад',bot:'📋 Срок давности ещё не истёк (3 года). Досудебная претензия + грамотный иск даёт 80%+ вероятности взыскания. Бесплатная оценка?'}]},
-  worker:{steps:[{bot:'Что случилось: увольнение, невыплата зарплаты?'},{user:'Уволили по собственному',bot:'Вас заставили написать заявление?'},{user:'Давили на меня',bot:'⚡ Принуждение — нарушение ТК РФ. Суд восстанавливает на работе или выплачивает компенсацию. ⏰ Срок — 1 месяц! Записать к специалисту прямо сейчас?'}]}
-};
-let cs=null,cst=0;
-function rs(t){cs=t;cst=0;document.getElementById('copts').innerHTML='';addB(scens[t].steps[0].bot);setTimeout(adv,800);}
-function adv(){if(!cs)return;const ss=scens[cs].steps;if(cst>=ss.length)return;const s=ss[cst];if(s.user){setTimeout(()=>{addU(s.user);setTimeout(()=>{addB(s.bot);cst++;if(cst>=ss.length)setTimeout(addCTA,500);else setTimeout(adv,1200);},600);},900);}else cst++;}
-function addCTA(){document.getElementById('copts').innerHTML='<button class="copt" onclick="showToast(\'🎉 Переход к оплате\');this.parentElement.innerHTML=\'\'">💳 Оплатить консультацию — 2 900 ₽</button><button class="copt" onclick="showToast(\'📞 Менеджер позвонит вам!\');this.parentElement.innerHTML=\'\'">📞 Перезвоните мне</button>';}
-function addMsg(cls,txt){const t=new Date(),ti=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');const el=document.createElement('div');el.className='msg '+cls;el.innerHTML=`<div class="bb">${txt.replace(/\n/g,'<br>')}</div><div class="mt">${ti}</div>`;el.style.opacity='0';el.style.transform='translateY(6px)';const m=document.getElementById('chatMsgs');m.appendChild(el);setTimeout(()=>{el.style.transition='all .25s';el.style.opacity='1';el.style.transform='translateY(0)';},10);m.scrollTop=m.scrollHeight;}
-function addB(t){addMsg('mb',t);}
-function addU(t){addMsg('mu',t);}
-function sendM(){const i=document.getElementById('ci');const txt=i.value.trim();if(!txt)return;addU(txt);i.value='';setTimeout(()=>{addB('Понял вас. Для точной оценки специалисту потребуется больше деталей. Хотите записаться на консультацию?');setTimeout(addCTA,400);},800);}
-document.getElementById('ci').addEventListener('keydown',e=>{if(e.key==='Enter')sendM();});
-function resetAn(){document.getElementById('resCard').classList.remove('show');document.getElementById('qcards').style.display='none';}
-function doUpload(){showToast('📂 Анализируем документ...');setTimeout(()=>{document.getElementById('resCard').classList.add('show');document.getElementById('qcards').style.display='block';animR();animD();showToast('✅ Анализ завершён — 15 рисков');},1800);}
-function animR(){document.querySelectorAll('.rf').forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w+'%';},300);});}
-function animD(){let n=0;const el=document.getElementById('dpct');const ring=document.getElementById('dring');const iv=setInterval(()=>{n++;el.textContent=n+'%';ring.style.strokeDashoffset=226-(226*n/100);if(n>=65)clearInterval(iv);},20);}
-const fmt=n=>new Intl.NumberFormat('ru-RU').format(Math.round(n))+' ₽';
-function us(el,vid,f){const v=parseFloat(el.value);document.getElementById(vid).textContent=f(v);const pct=(v-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min))*100;el.style.setProperty('--pct',pct+'%');}
-function cAlim(){const s=parseFloat(document.getElementById('sal').value)||0;const k=parseFloat(document.getElementById('kids').value);document.getElementById('alR').textContent=s>0?fmt(s*k):'—';}
-function cDtp(){const c=parseFloat(document.getElementById('carD').value)||0;const m=parseFloat(document.getElementById('medD').value)||0;const g=parseFloat(document.getElementById('guilt').value);document.getElementById('dtpR').textContent=fmt((c+m+30000)*g);}
-function cCase(){const mp={family:[.1,15000],civil:[.07,20000],criminal:[0,150000],arbitration:[.05,30000]};const t=document.getElementById('caseT').value;const a=parseFloat(document.getElementById('claimA').value)||0;const[p,b]=mp[t];document.getElementById('caseR').textContent=fmt(Math.max(b,a*p));const ss={family:'плюс представительство',civil:'плюс досудебное урегулирование',criminal:'ведение под ключ',arbitration:'плюс апелляция'};document.getElementById('caseRs').textContent=ss[t];}
-function cDead(){const d=document.getElementById('vDate').value;if(!d)return;const y=parseInt(document.getElementById('vType').value);const dl=new Date(d);dl.setFullYear(dl.getFullYear()+y);const days=Math.round((dl-new Date())/86400000);const el=document.getElementById('deadR'),sub=document.getElementById('deadRs');if(days<0){el.textContent='⛔ Истёк';el.style.color='var(--red)';sub.textContent=`Истёк ${Math.abs(days)} дней назад`;}else if(days<30){el.textContent=`⚠️ ${days} дн.`;el.style.color='var(--accent4)';sub.textContent='Критически мало! Срочно к юристу';}else if(days<180){el.textContent=`✅ ${days} дн.`;el.style.color='var(--accent3)';sub.textContent=`До ${dl.toLocaleDateString('ru-RU')}`;}else{el.textContent=`✅ ${Math.round(days/30)} мес.`;el.style.color='var(--accent3)';sub.textContent=`Дедлайн: ${dl.toLocaleDateString('ru-RU')}`;}}
-function initCRM(){const ds=[{id:'mb1',d:[65,72,58,80,90,75,85,95,88,110]},{id:'mb2',d:[15,18,12,22,28,20,25,30,27,35]},{id:'mb3',d:[400,450,380,520,600,480,560,680,700,820]},{id:'mb4',d:[18,19,17,22,24,21,23,25,24,27]}];ds.forEach(({id,d})=>{const el=document.getElementById(id);if(!el||el.children.length)return;const mx=Math.max(...d);d.forEach((v,i)=>{const b=document.createElement('div');b.className='mbar'+(i===d.length-1?' hi':'');b.style.height='0';el.appendChild(b);setTimeout(()=>{b.style.transition=`height .5s ${i*.04}s`;b.style.height=(v/mx*36)+'px';},50);});});setTimeout(()=>{document.querySelectorAll('.ff').forEach(f=>{f.style.width=f.dataset.w+'%';});},200);}
-document.querySelectorAll('input[type=range]').forEach(el=>{const v=parseFloat(el.value),mn=parseFloat(el.min),mx=parseFloat(el.max);el.style.setProperty('--pct',((v-mn)/(mx-mn)*100)+'%');});
-cAlim();cDtp();cCase();
+
+// P&L CALCULATOR
+function fmtRub(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'М ₽';
+  if (n >= 1000) return Math.round(n/1000) + 'К ₽';
+  return Math.round(n) + ' ₽';
+}
+
+function calcPnl() {
+  const sales = parseInt(document.getElementById('s-sales').value);
+  const price = parseInt(document.getElementById('s-price').value);
+  const subs = parseInt(document.getElementById('s-subs').value);
+  const costPct = parseInt(document.getElementById('s-cost').value) / 100;
+
+  document.getElementById('val-sales').textContent = sales;
+  document.getElementById('val-price').textContent = price.toLocaleString('ru');
+  document.getElementById('val-subs').textContent = subs;
+  document.getElementById('val-cost').textContent = document.getElementById('s-cost').value;
+
+  const salesRev = sales * price;
+  const subsRev = subs * 8000;
+  const total = salesRev + subsRev;
+  const costs = total * costPct;
+  const profit = total - costs;
+  const margin = (profit / total * 100).toFixed(1);
+
+  document.getElementById('r-sales-rev').textContent = fmtRub(salesRev);
+  document.getElementById('r-subs-rev').textContent = fmtRub(subsRev);
+  document.getElementById('r-costs').textContent = fmtRub(costs);
+  document.getElementById('r-profit').textContent = fmtRub(profit);
+  document.getElementById('r-margin').textContent = margin + '%';
+
+  updateChart(sales, price, subs, costPct);
+}
+
+function setScenario(s, p, sub, c) {
+  document.getElementById('s-sales').value = s;
+  document.getElementById('s-price').value = p;
+  document.getElementById('s-subs').value = sub;
+  document.getElementById('s-cost').value = c;
+  calcPnl();
+}
+
+function updateChart(sales, price, subs, costPct) {
+  const chart = document.getElementById('growth-chart');
+  chart.innerHTML = '';
+  const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+  const maxH = 180;
+  let maxVal = 0;
+  const data = months.map((m, i) => {
+    const growth = 1 + i * 0.12;
+    const rev = (sales * price + subs * 8000) * growth;
+    const cost = rev * costPct;
+    const profit = rev - cost;
+    if (rev > maxVal) maxVal = rev;
+    return { m, rev, cost, profit };
+  });
+
+  data.forEach(d => {
+    const grp = document.createElement('div');
+    grp.className = 'bar-group';
+    const wrap = document.createElement('div');
+    wrap.className = 'bar-wrap';
+
+    const bRev = document.createElement('div');
+    bRev.className = 'bar bar-rev';
+    bRev.style.height = Math.max(4, d.rev / maxVal * maxH) + 'px';
+    bRev.title = fmtRub(d.rev);
+
+    const bCost = document.createElement('div');
+    bCost.className = 'bar bar-cost';
+    bCost.style.height = Math.max(4, d.cost / maxVal * maxH) + 'px';
+    bCost.title = fmtRub(d.cost);
+
+    const bProfit = document.createElement('div');
+    bProfit.className = 'bar bar-profit';
+    bProfit.style.height = Math.max(4, d.profit / maxVal * maxH) + 'px';
+    bProfit.title = fmtRub(d.profit);
+
+    wrap.append(bRev, bCost, bProfit);
+    const lbl = document.createElement('div');
+    lbl.className = 'bar-label';
+    lbl.textContent = d.m;
+
+    grp.append(wrap, lbl);
+    chart.appendChild(grp);
+  });
+}
+
+// ROI CALCULATOR
+function calcRoi() {
+  const visitors = parseInt(document.getElementById('roi-visitors').value);
+  const check = parseInt(document.getElementById('roi-check').value);
+  const conv = parseInt(document.getElementById('roi-conv').value) / 100;
+
+  document.getElementById('rv-visitors').textContent = visitors.toLocaleString('ru');
+  document.getElementById('rv-check').textContent = check.toLocaleString('ru');
+  document.getElementById('rv-conv').textContent = document.getElementById('roi-conv').value;
+
+  const before = visitors * conv * check;
+  const afterConv = Math.min(conv * 4.2, 0.45);
+  const after = visitors * afterConv * check;
+  const delta = after - before;
+  const cost = 150000;
+  const paybackDays = Math.round(cost / (delta / 30));
+
+  document.getElementById('roi-before').textContent = fmtRub(before);
+  document.getElementById('roi-after').textContent = fmtRub(after);
+  document.getElementById('roi-delta').textContent = '+' + fmtRub(delta);
+  document.getElementById('roi-payback').textContent = paybackDays < 30 ? paybackDays + ' дн' : Math.ceil(paybackDays/30) + ' мес';
+}
+
+// INIT
+calcPnl();
+calcRoi();
+updateChart(3, 150000, 5, 0.18);
+
+// ANIMATE FUNNEL BARS ON SCROLL
+const funnelObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.funnel-bar').forEach(b => {
+        const w = b.style.width;
+        b.style.width = '0%';
+        setTimeout(() => { b.style.width = w; }, 100);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.funnel-vis').forEach(el => funnelObs.observe(el));
 </script>
 </body>
 </html>
